@@ -14,8 +14,8 @@ public class SysUserController {
     @Autowired
     private SysUserDao dao;
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseResult hello() {
-        return ResponseResult.success(dao.findAll());
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public ResponseResult login(String username, String password) {
+        return ResponseResult.success(null);
     }
 }

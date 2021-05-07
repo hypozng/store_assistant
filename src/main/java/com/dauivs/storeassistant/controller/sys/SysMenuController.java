@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 @RestController
 @RequestMapping("/sys/menu")
@@ -20,13 +21,13 @@ public class SysMenuController {
     public ResponseResult list() {
         try {
             return ResponseResult.success(dao.findAll());
-        } catch(Exception e) {
+        } catch (Exception e) {
             return ResponseResult.fail(ResponseResult.MESSAGE_FAIL01, e);
         }
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseResult info(@PathVariable Integer id) {
+    public ResponseResult info(@PathVariable int id) {
         try {
             return ResponseResult.success(dao.findById(id));
         } catch (Exception e) {
@@ -35,12 +36,12 @@ public class SysMenuController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseResult delete(@PathVariable Integer id) {
+    public ResponseResult delete(@PathVariable int id) {
         try {
             SysMenu sysMenu = dao.findById(id).get();
             sysMenu.setDeleted(BasisModel.ON);
-            return ResponseResult.success(sysMenu);
-        } catch(Exception e) {
+            return ResponseResult.success(dao.saveAndFlush(sysMenu));
+        } catch (Exception e) {
             return ResponseResult.fail(ResponseResult.MESSAGE_FAIL01, e);
         }
     }
@@ -53,9 +54,14 @@ public class SysMenuController {
             } else {
                 sysMenu.setCreateTime(new Timestamp(System.currentTimeMillis()));
                 sysMenu.setDeleted(BasisModel.OFF);
+                dao.saveAndFlush(sysMenu);
             }
-            dao.saveAndFlush(sysMenu);
-            return ResponseResult.success(sysMenu);
+            if (sysMenu.getParentId() != null) {
+                dao.findById(sysMenu.getParentId()).ifPresent(menu -> {
+                    sysMenu.setPath(menu.getPath() + "," + sysMenu.getId());
+                });
+            }
+            return ResponseResult.success(dao.saveAndFlush(sysMenu));
         } catch (Exception e) {
             return ResponseResult.fail(ResponseResult.MESSAGE_FAIL01, e);
         }
