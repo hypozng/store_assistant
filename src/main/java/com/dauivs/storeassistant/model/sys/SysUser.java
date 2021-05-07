@@ -9,10 +9,6 @@ import java.sql.Timestamp;
 @Table(name = "sys_user")
 public class SysUser extends BasisModel {
 
-    @Id
-    @Column(name = "id")
-    private Integer id;
-
     @Column(name = "user")
     private String user;
 
@@ -51,14 +47,6 @@ public class SysUser extends BasisModel {
 
     @Column(name = "dept_id")
     private Integer deptId;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getUser() {
         return user;

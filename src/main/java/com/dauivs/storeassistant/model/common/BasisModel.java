@@ -1,24 +1,52 @@
 package com.dauivs.storeassistant.model.common;
 
+import javax.persistence.*;
 import java.sql.Timestamp;
 
+/**
+ * 实体类的基础类
+ */
+@MappedSuperclass
 public class BasisModel {
+    /** 打开 */
+    public static final int ON = 1;
 
-    private int createUserId;
+    /** 关闭 */
+    public static final int OFF = 0;
 
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(name = "create_user_id")
+    private Integer createUserId;
+
+    @Column(name = "create_time")
     private Timestamp createTime;
 
-    private int updateUserId;
+    @Column(name = "update_user_id")
+    private Integer updateUserId;
 
+    @Column(name = "update_time")
     private Timestamp updateTime;
 
-    private int deleted;
+    @Column(name = "deleted")
+    private Integer deleted;
 
-    public int getCreateUserId() {
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getCreateUserId() {
         return createUserId;
     }
 
-    public void setCreateUserId(int createUserId) {
+    public void setCreateUserId(Integer createUserId) {
         this.createUserId = createUserId;
     }
 
@@ -30,11 +58,11 @@ public class BasisModel {
         this.createTime = createTime;
     }
 
-    public int getUpdateUserId() {
+    public Integer getUpdateUserId() {
         return updateUserId;
     }
 
-    public void setUpdateUserId(int updateUserId) {
+    public void setUpdateUserId(Integer updateUserId) {
         this.updateUserId = updateUserId;
     }
 
@@ -46,11 +74,11 @@ public class BasisModel {
         this.updateTime = updateTime;
     }
 
-    public int getDeleted() {
+    public Integer getDeleted() {
         return deleted;
     }
 
-    public void setDeleted(int deleted) {
+    public void setDeleted(Integer deleted) {
         this.deleted = deleted;
     }
 }
