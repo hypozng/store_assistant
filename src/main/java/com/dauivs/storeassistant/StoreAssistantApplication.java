@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories
 public class StoreAssistantApplication {
 
+
     public static void main(String[] args) {
         SpringApplication.run(StoreAssistantApplication.class, args);
     }

@@ -1,6 +1,7 @@
 package com.dauivs.storeassistant.model.sys;
 
-import com.dauivs.storeassistant.model.common.BasisModel;
+import com.dauivs.storeassistant.model.BasisModel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -11,6 +12,10 @@ public class SysUser extends BasisModel {
 
     @Column(name = "user")
     private String user;
+
+    @Column(name = "password")
+    @JsonIgnore
+    private String password;
 
     @Column(name = "token")
     private String token;
@@ -54,6 +59,14 @@ public class SysUser extends BasisModel {
 
     public void setUser(String user) {
         this.user = user;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getToken() {

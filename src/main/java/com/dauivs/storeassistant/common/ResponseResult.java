@@ -1,4 +1,4 @@
-package com.dauivs.storeassistant.model.common;
+package com.dauivs.storeassistant.common;
 
 /**
  * 请求响应结果

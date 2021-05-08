@@ -1,9 +1,8 @@
 package com.dauivs.storeassistant.model.sys;
 
-import com.dauivs.storeassistant.model.common.BasisModel;
+import com.dauivs.storeassistant.model.BasisModel;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 
 @Entity
 @Table(name = "sys_menu")

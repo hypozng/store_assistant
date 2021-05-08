@@ -1,14 +1,13 @@
 package com.dauivs.storeassistant.controller.sys;
 
 import com.dauivs.storeassistant.dao.sys.SysMenuDao;
-import com.dauivs.storeassistant.model.common.BasisModel;
-import com.dauivs.storeassistant.model.common.ResponseResult;
+import com.dauivs.storeassistant.model.BasisModel;
+import com.dauivs.storeassistant.common.ResponseResult;
 import com.dauivs.storeassistant.model.sys.SysMenu;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
-import java.util.Arrays;
 
 @RestController
 @RequestMapping("/sys/menu")

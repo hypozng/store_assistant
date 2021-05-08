@@ -1,4 +1,4 @@
-package com.dauivs.storeassistant.model.common;
+package com.dauivs.storeassistant.model;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
