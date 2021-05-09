@@ -4,6 +4,8 @@ import com.dauivs.storeassistant.dao.sys.SysMenuDao;
 import com.dauivs.storeassistant.model.BasisModel;
 import com.dauivs.storeassistant.common.ResponseResult;
 import com.dauivs.storeassistant.model.sys.SysMenu;
+import com.dauivs.storeassistant.model.sys.SysUser;
+import com.dauivs.storeassistant.utils.ShiroUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +23,7 @@ public class SysMenuController {
         try {
             return ResponseResult.success(dao.findAll());
         } catch (Exception e) {
-            return ResponseResult.fail(ResponseResult.MESSAGE_FAIL01, e);
+            return ResponseResult.fail(ResponseResult.MESSAGE_FAIL01, e.getMessage());
         }
     }
 
@@ -30,7 +32,7 @@ public class SysMenuController {
         try {
             return ResponseResult.success(dao.findById(id));
         } catch (Exception e) {
-            return ResponseResult.fail(ResponseResult.MESSAGE_FAIL01, e);
+            return ResponseResult.fail(ResponseResult.MESSAGE_FAIL01, e.getMessage());
         }
     }
 
@@ -41,16 +43,19 @@ public class SysMenuController {
             sysMenu.setDeleted(BasisModel.ON);
             return ResponseResult.success(dao.saveAndFlush(sysMenu));
         } catch (Exception e) {
-            return ResponseResult.fail(ResponseResult.MESSAGE_FAIL01, e);
+            return ResponseResult.fail(ResponseResult.MESSAGE_FAIL01, e.getMessage());
         }
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public ResponseResult save(@RequestBody SysMenu sysMenu) {
         try {
+            SysUser sysUser = ShiroUtil.getUser();
             if (sysMenu.getId() != null) {
+                sysMenu.setUpdateUserId(sysUser.getId());
                 sysMenu.setUpdateTime(new Timestamp(System.currentTimeMillis()));
             } else {
+                sysMenu.setCreateUserId(sysUser.getId());
                 sysMenu.setCreateTime(new Timestamp(System.currentTimeMillis()));
                 sysMenu.setDeleted(BasisModel.OFF);
                 dao.saveAndFlush(sysMenu);
@@ -62,7 +67,7 @@ public class SysMenuController {
             }
             return ResponseResult.success(dao.saveAndFlush(sysMenu));
         } catch (Exception e) {
-            return ResponseResult.fail(ResponseResult.MESSAGE_FAIL01, e);
+            return ResponseResult.fail(ResponseResult.MESSAGE_FAIL01, e.getMessage());
         }
     }
 }

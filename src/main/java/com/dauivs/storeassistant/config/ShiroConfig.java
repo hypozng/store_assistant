@@ -1,10 +1,12 @@
 package com.dauivs.storeassistant.config;
 
+import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.tomcat.websocket.AuthenticatorFactory;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
 import org.apache.shiro.mgt.SecurityManager;
@@ -16,17 +18,35 @@ import java.util.Map;
 
 @Configuration
 public class ShiroConfig {
+    /** 加密算法 */
+    public static final String HASH_ALGORITHM_NAME = "MD5";
 
-    @Bean
-    public ShiroRealm shiroRealm() {
-        return new ShiroRealm();
-    }
+    /** 加密次数 */
+    public static final int HASH_ITERATIONS = 5;
+
+    /** 加密盐 */
+    public static final String HASH_SALT = "salt";
 
     @Bean
     public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(shiroRealm());
         return securityManager;
+    }
+
+    @Bean
+    public ShiroRealm shiroRealm() {
+        ShiroRealm shiroRealm = new ShiroRealm();
+        shiroRealm.setCredentialsMatcher(credentialsMatcher());
+        return shiroRealm;
+    }
+
+    @Bean
+    public CredentialsMatcher credentialsMatcher() {
+        HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
+        hashedCredentialsMatcher.setHashAlgorithmName(HASH_ALGORITHM_NAME);
+        hashedCredentialsMatcher.setHashIterations(HASH_ITERATIONS);
+        return hashedCredentialsMatcher;
     }
 
     @Bean
@@ -41,17 +61,6 @@ public class ShiroConfig {
         return shiroFilterFactoryBean;
     }
 
-    @Bean(name = "credentialsMatcher")
-    public HashedCredentialsMatcher hashedCredentialsMatcher() {
-        HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
-        //散列算法:这里使用MD5算法;
-        hashedCredentialsMatcher.setHashAlgorithmName("md5");
-        //散列的次数，比如散列两次，相当于 md5(md5(""));
-        hashedCredentialsMatcher.setHashIterations(2);
-        //storedCredentialsHexEncoded默认是true，此时用的是密码加密用的是Hex编码；false时用Base64编码
-        hashedCredentialsMatcher.setStoredCredentialsHexEncoded(true);
-        return hashedCredentialsMatcher;
-    }
 //    /**
 //     * Shiro生命周期处理器
 //     */

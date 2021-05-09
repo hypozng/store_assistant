@@ -2,12 +2,14 @@ package com.dauivs.storeassistant.config;
 
 import com.dauivs.storeassistant.dao.sys.SysUserDao;
 import com.dauivs.storeassistant.model.sys.SysUser;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.*;
+import com.dauivs.storeassistant.utils.ShiroUtil;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.realm.AuthenticatingRealm;
-import org.apache.shiro.session.Session;
+import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 
 import java.util.Objects;
 
@@ -25,9 +27,8 @@ public class ShiroRealm extends AuthenticatingRealm {
         if (Objects.isNull(sysUser)) {
             return null;
         }
-        Session session = SecurityUtils.getSubject().getSession();
-        session.setAttribute("user", sysUser);
-        return new SimpleAuthenticationInfo(sysUser.getUser(), sysUser.getPassword(), getName());
+        ShiroUtil.setUser(sysUser);
+        return new SimpleAuthenticationInfo(sysUser.getUser(), sysUser.getPassword(), ByteSource.Util.bytes(ShiroConfig.HASH_SALT), getName());
     }
 
 }
