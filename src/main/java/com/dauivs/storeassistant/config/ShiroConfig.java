@@ -13,18 +13,26 @@ import org.apache.shiro.mgt.SecurityManager;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
+import javax.servlet.Filter;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Configuration
 public class ShiroConfig {
-    /** 加密算法 */
+    /**
+     * 加密算法
+     */
     public static final String HASH_ALGORITHM_NAME = "MD5";
 
-    /** 加密次数 */
+    /**
+     * 加密次数
+     */
     public static final int HASH_ITERATIONS = 5;
 
-    /** 加密盐 */
+    /**
+     * 加密盐
+     */
     public static final String HASH_SALT = "salt";
 
     @Bean
@@ -52,12 +60,19 @@ public class ShiroConfig {
     @Bean
     public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
+        shiroFilterFactoryBean.setLoginUrl("/sys/user/loginExpiredInfo");
         shiroFilterFactoryBean.setSecurityManager(securityManager);
-        Map<String, String> map = new HashMap<>();
-        map.put("/sys/user/logout", "logout");
-        map.put("/sys/user/login", "anon");
-        map.put("/**", "authc");
-        shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
+
+        shiroFilterFactoryBean.setFilters(new LinkedHashMap<String, Filter> () {{
+            put("form", new ShiroAccessFilter());
+        }});
+
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(new LinkedHashMap<String, String>() {{
+            put("/sys/user/logout", "logout");
+            put("/sys/user/login", "anon");
+            put("/**", "authc");
+        }});
+
         return shiroFilterFactoryBean;
     }
 

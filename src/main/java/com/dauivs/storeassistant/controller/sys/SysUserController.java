@@ -5,16 +5,9 @@ import com.dauivs.storeassistant.common.ResponseResult;
 import com.dauivs.storeassistant.model.BasisModel;
 import com.dauivs.storeassistant.model.sys.SysUser;
 import com.dauivs.storeassistant.utils.ShiroUtil;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authz.annotation.RequiresGuest;
-import org.apache.shiro.crypto.hash.Md5Hash;
-import org.apache.shiro.crypto.hash.SimpleHash;
-import org.apache.shiro.subject.Subject;
-import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -82,5 +75,10 @@ public class SysUserController {
         } catch (Exception e) {
             return ResponseResult.fail(ResponseResult.MESSAGE_FAIL01, e.getMessage());
         }
+    }
+
+    @RequestMapping(value = "/loginExpiredInfo", method = RequestMethod.GET)
+    public ResponseResult loginExpiredInfo() {
+        return ResponseResult.loginExpired();
     }
 }

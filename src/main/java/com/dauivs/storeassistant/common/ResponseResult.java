@@ -21,7 +21,7 @@ public class ResponseResult {
     public static final String MESSAGE_FAIL01 = "操作失败，请联系系统管理员";
 
     /** 响应结果消息 */
-    public static final String MESSAGE_FAIL02 = "登录失效，请重新登录";
+    public static final String MESSAGE_LOGIN_EXPIRED = "登录失效，请重新登录";
 
     private int code;
 
@@ -74,6 +74,14 @@ public class ResponseResult {
      */
     public static ResponseResult fail(String message) {
         return new ResponseResult(CODE_FAIL, message, null);
+    }
+
+    /**
+     * 登录失效
+     * @return
+     */
+    public static ResponseResult loginExpired() {
+        return new ResponseResult(CODE_LOGIN_EXPIRED, MESSAGE_LOGIN_EXPIRED, null);
     }
 
     public int getCode() {
