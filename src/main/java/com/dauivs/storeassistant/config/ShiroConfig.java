@@ -8,6 +8,7 @@ import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.tomcat.websocket.AuthenticatorFactory;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.apache.shiro.mgt.SecurityManager;
 import org.springframework.context.annotation.Configuration;
@@ -36,71 +37,54 @@ public class ShiroConfig {
     public static final String HASH_SALT = "salt";
 
     @Bean
-    public SecurityManager securityManager() {
+    public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager, ShiroAccessFilter shiroAccessFilter) {
+        Map<String, Filter> filters = new LinkedHashMap<>();
+        filters.put("access", shiroAccessFilter);
+
+        Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
+        filterChainDefinitionMap.put("/sys/user/logout", "logout");
+        filterChainDefinitionMap.put("/sys/user/login", "anon");
+        filterChainDefinitionMap.put("/**", "access");
+
+        ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
+        shiroFilterFactoryBean.setSecurityManager(securityManager);
+        shiroFilterFactoryBean.setFilters(filters);
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
+        return shiroFilterFactoryBean;
+    }
+
+    @Bean
+    public SecurityManager securityManager(ShiroRealm shiroRealm) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        securityManager.setRealm(shiroRealm());
+        securityManager.setRealm(shiroRealm);
         return securityManager;
     }
 
     @Bean
-    public ShiroRealm shiroRealm() {
+    public ShiroRealm shiroRealm(CredentialsMatcher credentialsMatcher) {
         ShiroRealm shiroRealm = new ShiroRealm();
-        shiroRealm.setCredentialsMatcher(credentialsMatcher());
+        shiroRealm.setCredentialsMatcher(credentialsMatcher);
         return shiroRealm;
     }
 
     @Bean
     public CredentialsMatcher credentialsMatcher() {
-        HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
-        hashedCredentialsMatcher.setHashAlgorithmName(HASH_ALGORITHM_NAME);
-        hashedCredentialsMatcher.setHashIterations(HASH_ITERATIONS);
-        return hashedCredentialsMatcher;
+        HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
+        credentialsMatcher.setHashAlgorithmName(HASH_ALGORITHM_NAME);
+        credentialsMatcher.setHashIterations(HASH_ITERATIONS);
+        return credentialsMatcher;
     }
 
     @Bean
-    public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
-        ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
-        shiroFilterFactoryBean.setLoginUrl("/sys/user/loginExpiredInfo");
-        shiroFilterFactoryBean.setSecurityManager(securityManager);
-
-        shiroFilterFactoryBean.setFilters(new LinkedHashMap<String, Filter> () {{
-            put("form", new ShiroAccessFilter());
-        }});
-
-        shiroFilterFactoryBean.setFilterChainDefinitionMap(new LinkedHashMap<String, String>() {{
-            put("/sys/user/logout", "logout");
-            put("/sys/user/login", "anon");
-            put("/**", "authc");
-        }});
-
-        return shiroFilterFactoryBean;
+    public ShiroAccessFilter shiroAccessFilter() {
+        return new ShiroAccessFilter();
     }
 
-//    /**
-//     * Shiro生命周期处理器
-//     */
-//    @Bean
-//    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
-//        return new LifecycleBeanPostProcessor();
-//    }
-//
-//    /**
-//     * 开启Shiro的注解(如@RequiresRoles,@RequiresPermissions),需借助SpringAOP扫描使用Shiro注解的类,并在必要时进行安全逻辑验证
-//     * 配置以下两个bean(DefaultAdvisorAutoProxyCreator(可选)和AuthorizationAttributeSourceAdvisor)即可实现此功能
-//     */
-//    @Bean
-//    @DependsOn({"lifecycleBeanPostProcessor"})
-//    public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator() {
-//        DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
-//        advisorAutoProxyCreator.setProxyTargetClass(true);
-//        return advisorAutoProxyCreator;
-//    }
-//
-//    @Bean
-//    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor() {
-//        AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
-//        authorizationAttributeSourceAdvisor.setSecurityManager(securityManager());
-//        return authorizationAttributeSourceAdvisor;
-//    }
+    @Bean
+    public FilterRegistrationBean shiroAccessFilterRegistration(ShiroAccessFilter shiroAccessFilter) {
+        FilterRegistrationBean registration = new FilterRegistrationBean(shiroAccessFilter);
+        registration.setEnabled(false);
+        return registration;
+    }
 
 }

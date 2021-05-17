@@ -1,23 +1,36 @@
 package com.dauivs.storeassistant.config;
 
 
-import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
-import org.springframework.stereotype.Component;
+import com.alibaba.fastjson.JSONObject;
+import com.dauivs.storeassistant.common.ResponseResult;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.filter.AccessControlFilter;
+import org.apache.shiro.web.util.WebUtils;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
 
-@Component
-public class ShiroAccessFilter extends FormAuthenticationFilter {
+public class ShiroAccessFilter extends AccessControlFilter {
+
     @Override
-    public boolean isAccessAllowed(ServletRequest servletRequest, ServletResponse servletResponse, Object o) {
-        System.out.println();
-        return true;
+    protected boolean isAccessAllowed(ServletRequest servletRequest, ServletResponse servletResponse, Object mappedValue) throws Exception {
+        if (isLoginRequest(servletRequest, servletResponse)) {
+            return true;
+        }
+        Subject subject = getSubject(servletRequest, servletResponse);
+        return subject.getPrincipal() != null;
     }
 
     @Override
-    protected boolean onAccessDenied(ServletRequest servletRequest, ServletResponse servletResponse) {
-        System.out.println();
-        return true;
+    protected boolean onAccessDenied(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
+        HttpServletResponse httpServletResponse = WebUtils.toHttp(servletResponse);
+        httpServletResponse.setContentType("application/json");
+        httpServletResponse.setCharacterEncoding("UTF-8");
+        PrintWriter writer = httpServletResponse.getWriter();
+        writer.write(JSONObject.toJSONString(ResponseResult.loginExpired()));
+        return false;
     }
 }

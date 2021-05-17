@@ -69,8 +69,7 @@ public class SysRoleController {
     @RequestMapping(value = "/page", method = RequestMethod.POST)
     public ResponseResult page(@RequestBody SearchParameter searchParameter) {
         try {
-            return ResponseResult.loginExpired();
-//            return ResponseResult.success(new PageData(dao.findAll()));
+            return ResponseResult.success(new PageData(dao.findAll()));
         } catch (Exception e) {
             return ResponseResult.fail(ResponseResult.MESSAGE_FAIL01, e.getMessage());
         }
