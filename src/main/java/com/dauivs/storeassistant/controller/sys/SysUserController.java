@@ -1,7 +1,7 @@
 package com.dauivs.storeassistant.controller.sys;
 
 import com.dauivs.storeassistant.dao.sys.SysUserDao;
-import com.dauivs.storeassistant.common.ResponseResult;
+import com.dauivs.storeassistant.common.ResponseData;
 import com.dauivs.storeassistant.model.BasisModel;
 import com.dauivs.storeassistant.model.sys.SysUser;
 import com.dauivs.storeassistant.utils.ShiroUtil;
@@ -21,64 +21,42 @@ public class SysUserController {
     private SysUserDao dao;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseResult info(@PathVariable int id) {
-        try {
-            return ResponseResult.success(dao.findById(id));
-        } catch (Exception e) {
-            return ResponseResult.fail(ResponseResult.MESSAGE_FAIL01, e.getMessage());
-        }
+    public ResponseData info(@PathVariable int id) {
+        return ResponseData.success(dao.findById(id));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseResult delete(@PathVariable int id) {
-        try {
-            SysUser sysUser = dao.findById(id).get();
-            sysUser.setDeleted(BasisModel.ON);
-            return ResponseResult.success(dao.saveAndFlush(sysUser));
-        } catch (Exception e) {
-            return ResponseResult.fail(ResponseResult.MESSAGE_FAIL01, e.getMessage());
-        }
+    public ResponseData delete(@PathVariable int id) {
+        SysUser sysUser = dao.findById(id).get();
+        sysUser.setDeleted(BasisModel.ON);
+        return ResponseData.success(dao.saveAndFlush(sysUser));
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public ResponseResult save(@RequestBody SysUser sysUser) {
-        try {
-            SysUser loginUser = ShiroUtil.getUser();
-            if (sysUser.getId() != null) {
-                sysUser.setUpdateUserId(loginUser.getId());
-                sysUser.setUpdateTime(new Timestamp(System.currentTimeMillis()));
-            } else {
-                sysUser.setCreateUserId(loginUser.getId());
-                sysUser.setCreateTime(new Timestamp(System.currentTimeMillis()));
-            }
-            return ResponseResult.success(dao.saveAndFlush(sysUser));
-        } catch (Exception e) {
-            return ResponseResult.fail(ResponseResult.MESSAGE_FAIL01, e.getMessage());
+    public ResponseData save(@RequestBody SysUser sysUser) {
+        SysUser loginUser = ShiroUtil.getUser();
+        if (sysUser.getId() != null) {
+            sysUser.setUpdateUserId(loginUser.getId());
+            sysUser.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+        } else {
+            sysUser.setCreateUserId(loginUser.getId());
+            sysUser.setCreateTime(new Timestamp(System.currentTimeMillis()));
         }
+        return ResponseData.success(dao.saveAndFlush(sysUser));
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseResult login(@RequestBody UsernamePasswordToken token) {
+    public ResponseData login(@RequestBody UsernamePasswordToken token) {
         try {
-            return ResponseResult.success(ShiroUtil.login(token));
+            return ResponseData.success(ShiroUtil.login(token));
         } catch (UnknownAccountException | IncorrectCredentialsException e) {
-            return ResponseResult.fail("用户名或密码错误");
-        } catch (Exception e) {
-            return ResponseResult.fail(ResponseResult.MESSAGE_FAIL01, e.getMessage());
+            return ResponseData.fail("用户名或密码错误");
         }
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
-    public ResponseResult logout() {
-        try {
-            return ResponseResult.success(ShiroUtil.logout());
-        } catch (Exception e) {
-            return ResponseResult.fail(ResponseResult.MESSAGE_FAIL01, e.getMessage());
-        }
+    public ResponseData logout() {
+        return ResponseData.success(ShiroUtil.logout());
     }
 
-    @RequestMapping(value = "/loginExpiredInfo", method = RequestMethod.GET)
-    public ResponseResult loginExpiredInfo() {
-        return ResponseResult.loginExpired();
-    }
 }

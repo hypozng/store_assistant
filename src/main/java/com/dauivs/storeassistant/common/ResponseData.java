@@ -3,7 +3,7 @@ package com.dauivs.storeassistant.common;
 /**
  * 请求响应结果
  */
-public class ResponseResult {
+public class ResponseData {
 
     /** 响应结果状态  成功 */
     public static final int CODE_SUCCESS = 0;
@@ -29,10 +29,10 @@ public class ResponseResult {
 
     private Object data;
 
-    ResponseResult() {
+    ResponseData() {
     }
 
-    ResponseResult(int code, String message, Object data) {
+    ResponseData(int code, String message, Object data) {
         this.code = code;
         this.message = message;
         this.data = data;
@@ -44,8 +44,8 @@ public class ResponseResult {
      * @param message 响应消息
      * @return
      */
-    public static ResponseResult success(String message, Object data) {
-        return new ResponseResult(CODE_SUCCESS, message, data);
+    public static ResponseData success(String message, Object data) {
+        return new ResponseData(CODE_SUCCESS, message, data);
     }
 
     /**
@@ -53,8 +53,8 @@ public class ResponseResult {
      * @param data 响应结果数据
      * @return
      */
-    public static ResponseResult success(Object data) {
-        return new ResponseResult(CODE_SUCCESS, MESSAGE_SUCCESS, data);
+    public static ResponseData success(Object data) {
+        return new ResponseData(CODE_SUCCESS, MESSAGE_SUCCESS, data);
     }
 
     /**
@@ -63,8 +63,8 @@ public class ResponseResult {
      * @param data 响应结果数据
      * @return
      */
-    public static ResponseResult fail(String message, Object data) {
-        return new ResponseResult(CODE_FAIL, message, data);
+    public static ResponseData fail(String message, Object data) {
+        return new ResponseData(CODE_FAIL, message, data);
     }
 
     /**
@@ -72,16 +72,16 @@ public class ResponseResult {
      * @param message 响应结果消息
      * @return
      */
-    public static ResponseResult fail(String message) {
-        return new ResponseResult(CODE_FAIL, message, null);
+    public static ResponseData fail(String message) {
+        return new ResponseData(CODE_FAIL, message, null);
     }
 
     /**
      * 登录失效
      * @return
      */
-    public static ResponseResult loginExpired() {
-        return new ResponseResult(CODE_LOGIN_EXPIRED, MESSAGE_LOGIN_EXPIRED, null);
+    public static ResponseData loginExpired() {
+        return new ResponseData(CODE_LOGIN_EXPIRED, MESSAGE_LOGIN_EXPIRED, null);
     }
 
     public int getCode() {

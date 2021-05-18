@@ -2,8 +2,7 @@ package com.dauivs.storeassistant.config;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.dauivs.storeassistant.common.ResponseResult;
-import org.apache.shiro.SecurityUtils;
+import com.dauivs.storeassistant.common.ResponseData;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.apache.shiro.web.util.WebUtils;
@@ -30,7 +29,7 @@ public class ShiroAccessFilter extends AccessControlFilter {
         httpServletResponse.setContentType("application/json");
         httpServletResponse.setCharacterEncoding("UTF-8");
         PrintWriter writer = httpServletResponse.getWriter();
-        writer.write(JSONObject.toJSONString(ResponseResult.loginExpired()));
+        writer.write(JSONObject.toJSONString(ResponseData.loginExpired()));
         return false;
     }
 }

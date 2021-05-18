@@ -2,9 +2,11 @@ package com.dauivs.storeassistant.dao.sys;
 
 import com.dauivs.storeassistant.common.PageData;
 import com.dauivs.storeassistant.common.SearchParameter;
+import com.dauivs.storeassistant.dao.DBDao;
 import com.dauivs.storeassistant.model.sys.SysRole;
 import org.hibernate.query.internal.NativeQueryImpl;
 import org.hibernate.transform.Transformers;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -32,8 +34,8 @@ interface SysRoleDaoCustom {
 
 class SysRoleDaoCustomImpl implements SysRoleDaoCustom {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Autowired
+    private DBDao dbDao;
 
     @Override
     public PageData<SysRole> findPage(SearchParameter searchParameter) {
@@ -45,12 +47,6 @@ class SysRoleDaoCustomImpl implements SysRoleDaoCustom {
                 values.add(searchParameter.getParams().get("name"));
             }
         }
-        javax.persistence.Query query = entityManager.createQuery(sql.toString());
-        for (int i = 0; i < values.size(); ++i) {
-            query.setParameter(i + 1, String.valueOf(values.get(i)));
-        }
-        query.unwrap(NativeQueryImpl.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
-        List<HashMap> list = query.getResultList();
-        return new PageData(list);
+        return new PageData(dbDao.runSql(sql.toString(), values.toArray()));
     }
 }

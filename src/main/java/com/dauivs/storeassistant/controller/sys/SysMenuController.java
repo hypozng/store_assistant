@@ -2,7 +2,7 @@ package com.dauivs.storeassistant.controller.sys;
 
 import com.dauivs.storeassistant.dao.sys.SysMenuDao;
 import com.dauivs.storeassistant.model.BasisModel;
-import com.dauivs.storeassistant.common.ResponseResult;
+import com.dauivs.storeassistant.common.ResponseData;
 import com.dauivs.storeassistant.model.sys.SysMenu;
 import com.dauivs.storeassistant.model.sys.SysUser;
 import com.dauivs.storeassistant.utils.ShiroUtil;
@@ -19,55 +19,39 @@ public class SysMenuController {
     private SysMenuDao dao;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseResult list() {
-        try {
-            return ResponseResult.success(dao.findAll());
-        } catch (Exception e) {
-            return ResponseResult.fail(ResponseResult.MESSAGE_FAIL01, e.getMessage());
-        }
+    public ResponseData list() {
+        return ResponseData.success(dao.findAll());
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseResult info(@PathVariable int id) {
-        try {
-            return ResponseResult.success(dao.findById(id));
-        } catch (Exception e) {
-            return ResponseResult.fail(ResponseResult.MESSAGE_FAIL01, e.getMessage());
-        }
+    public ResponseData info(@PathVariable int id) {
+        return ResponseData.success(dao.findById(id));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseResult delete(@PathVariable int id) {
-        try {
-            SysMenu sysMenu = dao.findById(id).get();
-            sysMenu.setDeleted(BasisModel.ON);
-            return ResponseResult.success(dao.saveAndFlush(sysMenu));
-        } catch (Exception e) {
-            return ResponseResult.fail(ResponseResult.MESSAGE_FAIL01, e.getMessage());
-        }
+    public ResponseData delete(@PathVariable int id) {
+        SysMenu sysMenu = dao.findById(id).get();
+        sysMenu.setDeleted(BasisModel.ON);
+        return ResponseData.success(dao.saveAndFlush(sysMenu));
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public ResponseResult save(@RequestBody SysMenu sysMenu) {
-        try {
-            SysUser sysUser = ShiroUtil.getUser();
-            if (sysMenu.getId() != null) {
-                sysMenu.setUpdateUserId(sysUser.getId());
-                sysMenu.setUpdateTime(new Timestamp(System.currentTimeMillis()));
-            } else {
-                sysMenu.setCreateUserId(sysUser.getId());
-                sysMenu.setCreateTime(new Timestamp(System.currentTimeMillis()));
-                sysMenu.setDeleted(BasisModel.OFF);
-                dao.saveAndFlush(sysMenu);
-            }
-            if (sysMenu.getParentId() != null) {
-                dao.findById(sysMenu.getParentId()).ifPresent(menu -> {
-                    sysMenu.setPath(menu.getPath() + "," + sysMenu.getId());
-                });
-            }
-            return ResponseResult.success(dao.saveAndFlush(sysMenu));
-        } catch (Exception e) {
-            return ResponseResult.fail(ResponseResult.MESSAGE_FAIL01, e.getMessage());
+    public ResponseData save(@RequestBody SysMenu sysMenu) {
+        SysUser sysUser = ShiroUtil.getUser();
+        if (sysMenu.getId() != null) {
+            sysMenu.setUpdateUserId(sysUser.getId());
+            sysMenu.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+        } else {
+            sysMenu.setCreateUserId(sysUser.getId());
+            sysMenu.setCreateTime(new Timestamp(System.currentTimeMillis()));
+            sysMenu.setDeleted(BasisModel.OFF);
+            dao.saveAndFlush(sysMenu);
         }
+        if (sysMenu.getParentId() != null) {
+            dao.findById(sysMenu.getParentId()).ifPresent(menu -> {
+                sysMenu.setPath(menu.getPath() + "," + sysMenu.getId());
+            });
+        }
+        return ResponseData.success(dao.saveAndFlush(sysMenu));
     }
 }
