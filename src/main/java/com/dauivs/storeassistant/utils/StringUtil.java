@@ -59,6 +59,34 @@ public class StringUtil {
     }
 
     /**
+     * 将下划线命名风格转换为驼峰命名风格
+     *
+     * @param map
+     * @return
+     */
+    public static <V> Map<String, V> lineToHump(Map<String, V> map) {
+        if (map == null) {
+            return null;
+        }
+        Map<String, V> result = new HashMap<>();
+        map.forEach((key, value) -> result.put(lineToHump(key), value));
+        return result;
+    }
+
+    /**
+     * 将下划线命名风格转换为驼峰命名风格
+     *
+     * @param list
+     * @return
+     */
+    public static <V> List<Map<String, V>> lineToHump(List<? extends Map<String, V>> list) {
+        if (list == null) {
+            return null;
+        }
+        return list.stream().map(StringUtil::lineToHump).collect(Collectors.toList());
+    }
+
+    /**
      * 将驼峰命名风格转换为下划线命名风格
      *
      * @param source
@@ -82,58 +110,30 @@ public class StringUtil {
     }
 
     /**
-     * 将map中key下划线命名风格转换为驼峰命名风格
+     * 将驼峰命名风格转换为下划线命名风格
      *
      * @param map
      * @return
      */
-    public static <V> Map<String, V> toHumpKeys(Map<String, V> map) {
+    public static <V> Map<String, V> humpToLine(Map<String, V> map) {
         if (map == null) {
             return null;
         }
-        HashMap result = new HashMap();
-        map.forEach((key, value) -> result.put(lineToHump(key), value));
-        return result;
-    }
-
-    /**
-     * 将map中key下划线命名风格转换为驼峰命名风格
-     *
-     * @param list
-     * @return
-     */
-    public static <V> List<Map<String, V>> toHumpKeys(Collection<Map<String, V>> list) {
-        if (list == null) {
-            return null;
-        }
-        return list.stream().map(StringUtil::toHumpKeys).collect(Collectors.toList());
-    }
-
-    /**
-     * 将map中key驼峰命名风格转换为下划线命名风格
-     * @param map
-     * @param <V>
-     * @return
-     */
-    public static <V> Map<String, V> toLineKeys(Map<String, V> map) {
-        if (map == null) {
-            return null;
-        }
-        HashMap result = new HashMap();
+        HashMap<String, V> result = new HashMap<>();
         map.forEach((key, value) -> result.put(humpToLine(key), value));
         return result;
     }
 
     /**
-     * 将map中key驼峰命名风格转换为下划线命名风格
+     * 将驼峰命名风格转换为下划线命名风格
+     *
      * @param list
-     * @param <V>
      * @return
      */
-    public static <V> List<Map<String, V>> toLineKeys(Collection<Map<String, V>> list) {
+    public static <V> List<Map<String, V>> humpToLine(List<? extends Map<String, V>> list) {
         if (list == null) {
             return null;
         }
-        return list.stream().map(StringUtil::toLineKeys).collect(Collectors.toList());
+        return list.stream().map(StringUtil::humpToLine).collect(Collectors.toList());
     }
 }

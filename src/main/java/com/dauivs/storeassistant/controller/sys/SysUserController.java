@@ -48,6 +48,7 @@ public class SysUserController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseData login(@RequestBody UsernamePasswordToken token) {
         try {
+            System.out.println(ShiroUtil.md5(new String(token.getPassword())));
             return ResponseData.success(ShiroUtil.login(token));
         } catch (UnknownAccountException | IncorrectCredentialsException e) {
             return ResponseData.fail("用户名或密码错误");
