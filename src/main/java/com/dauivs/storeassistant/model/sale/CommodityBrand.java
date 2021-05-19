@@ -1,4 +1,4 @@
-package com.dauivs.storeassistant.model.sys;
+package com.dauivs.storeassistant.model.sale;
 
 import com.dauivs.storeassistant.model.BaseModel;
 
@@ -7,19 +7,17 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "sys_role")
-public class SysRole extends BaseModel {
+@Table(name = "commodity_brand")
+public class CommodityBrand extends BaseModel {
+
     @Column(name = "name")
     private String name;
 
-    @Column(name = "code")
-    private String code;
+    @Column(name = "icon")
+    private String icon;
 
     @Column(name = "remark")
     private String remark;
-
-    @Column(name = "disabled")
-    private Integer disabled;
 
     public String getName() {
         return name;
@@ -29,12 +27,12 @@ public class SysRole extends BaseModel {
         this.name = name;
     }
 
-    public String getCode() {
-        return code;
+    public String getIcon() {
+        return icon;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public String getRemark() {
@@ -43,13 +41,5 @@ public class SysRole extends BaseModel {
 
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    public Integer getDisabled() {
-        return disabled;
-    }
-
-    public void setDisabled(Integer disabled) {
-        this.disabled = disabled;
     }
 }

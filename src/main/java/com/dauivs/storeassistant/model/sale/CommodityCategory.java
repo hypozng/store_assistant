@@ -1,12 +1,14 @@
-package com.dauivs.storeassistant.model.sys;
+package com.dauivs.storeassistant.model.sale;
 
 import com.dauivs.storeassistant.model.BaseModel;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
-@Table(name = "sys_menu")
-public class SysMenu extends BaseModel {
+@Table(name = "commodity_category")
+public class CommodityCategory extends BaseModel {
 
     @Column(name = "name")
     private String name;
@@ -14,26 +16,14 @@ public class SysMenu extends BaseModel {
     @Column(name = "icon")
     private String icon;
 
-    @Column(name = "url")
-    private String url;
-
-    @Column(name = "params")
-    private String params;
-
     @Column(name = "parent_id")
     private Integer parentId;
 
     @Column(name = "path")
     private String path;
 
-    @Column(name = "order_index")
-    private Integer orderIndex;
-
     @Column(name = "remark")
     private String remark;
-
-    @Column(name = "disabled")
-    private Integer disabled;
 
     public String getName() {
         return name;
@@ -49,22 +39,6 @@ public class SysMenu extends BaseModel {
 
     public void setIcon(String icon) {
         this.icon = icon;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getParams() {
-        return params;
-    }
-
-    public void setParams(String params) {
-        this.params = params;
     }
 
     public Integer getParentId() {
@@ -83,14 +57,6 @@ public class SysMenu extends BaseModel {
         this.path = path;
     }
 
-    public Integer getOrderIndex() {
-        return orderIndex;
-    }
-
-    public void setOrderIndex(Integer orderIndex) {
-        this.orderIndex = orderIndex;
-    }
-
     public String getRemark() {
         return remark;
     }
@@ -98,13 +64,4 @@ public class SysMenu extends BaseModel {
     public void setRemark(String remark) {
         this.remark = remark;
     }
-
-    public Integer getDisabled() {
-        return disabled;
-    }
-
-    public void setDisabled(Integer disabled) {
-        this.disabled = disabled;
-    }
-
 }

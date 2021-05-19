@@ -1,6 +1,6 @@
 package com.dauivs.storeassistant.model.sys;
 
-import com.dauivs.storeassistant.model.BasisModel;
+import com.dauivs.storeassistant.model.BaseModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "sys_user")
-public class SysUser extends BasisModel {
+public class SysUser extends BaseModel {
 
     @Column(name = "user")
     private String user;

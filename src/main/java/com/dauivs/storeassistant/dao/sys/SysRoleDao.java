@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,20 @@ class SysRoleDaoCustomImpl implements SysRoleDaoCustom {
                 sql.append(" and name like ?");
                 values.add("%" + searchParameter.getParams().get("name") + "%");
             }
+            if (!StringUtil.isEmpty(searchParameter.getParams().get("code"))) {
+                sql.append(" and code like ?");
+                values.add("%" + searchParameter.getParams().get("code") + "%");
+            }
+            if (!StringUtil.isEmpty(searchParameter.getParams().get("remark"))) {
+                sql.append(" and remark like ?");
+                values.add("%" + searchParameter.getParams().get("remark") + "%");
+            }
+            if (!StringUtil.isEmpty(searchParameter.getParams().get("disabled"))) {
+                sql.append(" and disabled = ?");
+                values.add(searchParameter.getParams().get("disabled"));
+            }
         }
-        return new PageData(dbDao.runSql(sql, values));
+
+        return dbDao.queryPage(sql, values, searchParameter);
     }
 }

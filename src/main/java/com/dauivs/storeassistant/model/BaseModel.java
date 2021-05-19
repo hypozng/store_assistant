@@ -1,5 +1,8 @@
 package com.dauivs.storeassistant.model;
 
+import com.dauivs.storeassistant.model.sys.SysUser;
+import com.dauivs.storeassistant.utils.ShiroUtil;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
@@ -7,7 +10,7 @@ import java.sql.Timestamp;
  * 实体类的基础类
  */
 @MappedSuperclass
-public class BasisModel {
+public class BaseModel {
     /** 打开 */
     public static final int ON = 1;
 
@@ -81,4 +84,5 @@ public class BasisModel {
     public void setDeleted(Integer deleted) {
         this.deleted = deleted;
     }
+
 }
