@@ -16,6 +16,9 @@ public class CommodityCategory extends BaseModel {
     @Column(name = "icon")
     private String icon;
 
+    @Column(name = "order_index")
+    private Integer orderIndex;
+
     @Column(name = "parent_id")
     private Integer parentId;
 
@@ -39,6 +42,14 @@ public class CommodityCategory extends BaseModel {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public Integer getOrderIndex() {
+        return orderIndex;
+    }
+
+    public void setOrderIndex(Integer orderIndex) {
+        this.orderIndex = orderIndex;
     }
 
     public Integer getParentId() {

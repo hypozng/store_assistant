@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface CommodityBrandDao extends JpaRepository<CommodityBrand, Integer>, CommodityBrandDaoCustom {
 
-    @Query(value = "select * from commodity_brand where deleted = 0", nativeQuery = true)
+    @Query(value = "select * from commodity_brand where deleted = 0 order by order_index", nativeQuery = true)
     List<CommodityBrand> findAll();
 
 }
@@ -31,7 +31,7 @@ class CommodityBrandDaoCustomImpl implements CommodityBrandDaoCustom {
     public PageData queryPage(SearchParameter searchParameter) {
         StringBuilder sql = new StringBuilder();
         List<Object> values = new ArrayList<>();
-        sql.append("select * from commodity_brand where deleted = 0");
+        sql.append("select * from commodity_brand where deleted = 0 order by order_index");
         return dbDao.queryPage(sql, values, searchParameter);
     }
 }

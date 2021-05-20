@@ -16,6 +16,9 @@ public class CommodityBrand extends BaseModel {
     @Column(name = "icon")
     private String icon;
 
+    @Column(name = "order_index")
+    private Integer orderIndex;
+
     @Column(name = "remark")
     private String remark;
 
@@ -33,6 +36,14 @@ public class CommodityBrand extends BaseModel {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public Integer getOrderIndex() {
+        return orderIndex;
+    }
+
+    public void setOrderIndex(Integer orderIndex) {
+        this.orderIndex = orderIndex;
     }
 
     public String getRemark() {

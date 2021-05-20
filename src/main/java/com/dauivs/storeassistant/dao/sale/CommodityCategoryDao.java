@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface CommodityCategoryDao extends JpaRepository<CommodityCategory, Integer>, CommodityCategoryDaoCustom {
 
-    @Query(value = "select * from commodity_category where deleted = 0", nativeQuery = true)
+    @Query(value = "select * from commodity_category where deleted = 0 order by order_index", nativeQuery = true)
     List<CommodityCategory> findAll();
 }
 
