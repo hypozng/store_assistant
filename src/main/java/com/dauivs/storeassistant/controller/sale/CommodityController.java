@@ -31,6 +31,9 @@ public class CommodityController {
     
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public ResponseData save(@RequestBody Commodity commodity) {
+        if (commodity.getId() == null) {
+            commodity.setAmount(0);
+        }
         return ResponseData.success(CommonUtil.save(dao, commodity));
     }
     

@@ -25,7 +25,10 @@ class CommodityDaoCustomImpl implements CommodityDaoCustom {
     @Override
     public PageData queryPage(SearchParameter searchParameter) {
         StringBuilder sql = new StringBuilder();
-        sql.append("select * from commodity where deleted = 0");
+        sql.append("select a.*, brand.name brand_name, category.name category_name from commodity a" +
+                " left join commodity_brand brand on brand.id = a.brand_id" +
+                " left join commodity_category category on category.id = a.category_id" +
+                " where a.deleted = 0");
         List<Object> values = new ArrayList<>();
         return dbDao.queryPage(sql, values, searchParameter);
     }
