@@ -1,5 +1,9 @@
 package com.dauivs.storeassistant.common;
 
+import com.dauivs.storeassistant.utils.ConvertUtil;
+import com.dauivs.storeassistant.utils.StringUtil;
+
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -54,5 +58,49 @@ public class SearchParameter {
 
     public void setParams(Map<String, Object> params) {
         this.params = params;
+    }
+
+    /**
+     * 判断查询参数是否不为空
+     * @param key
+     * @return
+     */
+    public boolean isNotEmptyParam(String key) {
+        return !StringUtil.isEmpty(getParam(key));
+    }
+
+    /**
+     * 获取查询参数值
+     * @param key
+     * @return
+     */
+    public Object getParam(String key) {
+        if (params == null || StringUtil.isEmpty(key)) {
+            return null;
+        }
+        return params.get(key);
+    }
+
+    /**
+     * 获取查询参数，并将其格式化
+     * @param key
+     * @param format
+     * @return
+     */
+    public String getParam(String key, String format) {
+        String value = ConvertUtil.toStr(getParam(key));
+        return String.format(format, value);
+    }
+
+    /**
+     * 设置查询参数值
+     * @param key
+     * @param value
+     */
+    public void setParam(String key, Object value) {
+        if (params == null) {
+            params = new HashMap<>();
+        }
+        params.put(key, value);
     }
 }

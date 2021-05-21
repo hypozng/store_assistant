@@ -4,6 +4,7 @@ import com.dauivs.storeassistant.common.PageData;
 import com.dauivs.storeassistant.common.SearchParameter;
 import com.dauivs.storeassistant.model.sale.Commodity;
 import com.dauivs.storeassistant.dao.DBDao;
+import com.dauivs.storeassistant.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -30,6 +31,26 @@ class CommodityDaoCustomImpl implements CommodityDaoCustom {
                 " left join commodity_category category on category.id = a.category_id" +
                 " where a.deleted = 0");
         List<Object> values = new ArrayList<>();
+        if (searchParameter.isNotEmptyParam("brandId")) {
+            sql.append(" and a.brand_id = ?");
+            values.add(searchParameter.getParam("brandId"));
+        }
+        if (searchParameter.isNotEmptyParam("categoryId")) {
+            sql.append(" and a.category_id = ?");
+            values.add(searchParameter.getParam("categoryId"));
+        }
+        if (searchParameter.isNotEmptyParam("name")) {
+            sql.append(" and a.name like ?");
+            values.add(searchParameter.getParam("name", "%%%s%%"));
+        }
+        if (searchParameter.isNotEmptyParam("priceMin")) {
+            sql.append(" and a.price >= ?");
+            values.add(searchParameter.getParam("priceMin"));
+        }
+        if (searchParameter.isNotEmptyParam("priceMax")) {
+            sql.append(" and a.price <= ?");
+            values.add(searchParameter.getParam("priceMax"));
+        }
         return dbDao.queryPage(sql, values, searchParameter);
     }
 }
