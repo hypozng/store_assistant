@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/sys/role")
+@RequestMapping("/api/sys/role")
 public class SysRoleController {
 
     @Autowired

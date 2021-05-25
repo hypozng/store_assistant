@@ -42,9 +42,10 @@ public class ShiroConfig {
         filters.put("access", shiroAccessFilter);
 
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
-        filterChainDefinitionMap.put("/sys/user/logout", "logout");
-        filterChainDefinitionMap.put("/sys/user/login", "anon");
-        filterChainDefinitionMap.put("/**", "access");
+        filterChainDefinitionMap.put("/api/sys/user/logout", "anon");
+        filterChainDefinitionMap.put("/api/sys/user/login", "anon");
+        filterChainDefinitionMap.put("/api/**", "access");
+        filterChainDefinitionMap.put("/**", "anon");
 
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
