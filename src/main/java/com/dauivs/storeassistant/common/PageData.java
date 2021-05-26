@@ -1,54 +1,71 @@
 package com.dauivs.storeassistant.common;
 
+import com.dauivs.storeassistant.utils.ConvertUtil;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 public class PageData<T> {
-    /** 页码 */
-    private long page;
+    /**
+     * 页码
+     */
+    private Long page;
 
-    /** 页面数据量 */
-    private long size;
+    /**
+     * 页面数据量
+     */
+    private Long size;
 
-    /** 总数据量 */
-    private long total;
+    /**
+     * 总数据量
+     */
+    private Long total;
 
-    /** 页面内容 */
+    /**
+     * 页面内容
+     */
     private List<T> content;
 
-    public PageData() {}
+    public PageData() {
+    }
 
-    public PageData(List<T> content) {
-        page = 1;
-        size = 10;
-        total = content.size();
+    public PageData(List<T> content, Long total, Long page, Long size) {
         this.content = content;
-    }
-
-    public long getPage() {
-        return page;
-    }
-
-    public void setPage(long page) {
+        this.total = total;
         this.page = page;
-    }
-
-    public long getSize() {
-        return size;
-    }
-
-    public void setSize(long size) {
         this.size = size;
     }
 
-    public long getTotal() {
+    public PageData(List<T> content) {
+        this(content, content == null ? 0 : (long) content.size(), 1L, 10L);
+    }
+
+    public Long getPage() {
+        return page;
+    }
+
+    public void setPage(Long page) {
+        this.page = page;
+    }
+
+    public Long getSize() {
+        return size;
+    }
+
+    public void setSize(Long size) {
+        this.size = size;
+    }
+
+    public Long getTotal() {
         return total;
     }
 
-    public void setTotal(long total) {
+    public void setTotal(Long total) {
         this.total = total;
     }
 
-    public long getMaxPage() {
+    @JsonProperty("maxPage")
+    public Long getMaxPage() {
         return total / size + (total % size == 0 ? 0 : 1);
     }
 

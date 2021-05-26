@@ -70,6 +70,30 @@ public class DBDao {
      * @return
      */
     public PageData queryPage(CharSequence sql, Collection<?> params, SearchParameter searchParameter) {
-        return new PageData(query(sql, params));
+        long page = 1;
+        if (searchParameter.getPage() != null && searchParameter.getPage() > 0) {
+            page = searchParameter.getPage();
+        }
+        long size = 10;
+        if (searchParameter.getSize() != null && searchParameter.getSize() > 0) {
+            size = searchParameter.getSize();
+        }
+        StringBuilder s = new StringBuilder(sql);
+        if (!StringUtil.isEmpty(searchParameter.getSort())) {
+            s.append(" order by ");
+            s.append(searchParameter.getSort());
+            s.append(" ");
+            s.append("desc".equals(searchParameter.getDir()) ? "desc" : "asc");
+        }
+        s.append(" limit ");
+        s.append((page - 1) * size);
+        s.append(", ");
+        s.append(size);
+        List list = query(s, params);
+
+        String countSql = "select count(*) num from (" + sql + ") t";
+        Long total = ConvertUtil.toLong(querySingle(countSql, params).get("num"));
+
+        return new PageData(list, total, page, size);
     }
 }

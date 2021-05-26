@@ -40,6 +40,6 @@ public class SysMenuController {
                 sysMenu.setPath(menu.getPath() + "," + sysMenu.getId());
             });
         }
-        return ResponseData.success(dao.saveAndFlush(sysMenu));
+        return ResponseData.success(CommonUtil.save(dao, sysMenu));
     }
 }

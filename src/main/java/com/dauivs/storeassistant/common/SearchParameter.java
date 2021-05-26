@@ -10,9 +10,9 @@ import java.util.Map;
  * 查询参数
  */
 public class SearchParameter {
-    private long page;
+    private Long page;
 
-    private long size;
+    private Long size;
 
     private String sort;
 
@@ -20,19 +20,19 @@ public class SearchParameter {
 
     private Map<String, Object> params;
 
-    public long getPage() {
+    public Long getPage() {
         return page;
     }
 
-    public void setPage(long page) {
+    public void setPage(Long page) {
         this.page = page;
     }
 
-    public long getSize() {
+    public Long getSize() {
         return size;
     }
 
-    public void setSize(long size) {
+    public void setSize(Long size) {
         this.size = size;
     }
 

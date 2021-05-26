@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface SysUserDao extends JpaRepository<SysUser, Integer>, SysUserDaoCustom {
@@ -44,6 +45,12 @@ class SysUserDaoCustomImpl implements SysUserDaoCustom {
             sql.append(" and user like ?");
             values.add(searchParameter.getParam("user", "%%%s%%"));
         }
-        return dbDao.queryPage(sql, values, searchParameter);
+        PageData pageData = dbDao.queryPage(sql, values, searchParameter);
+        if (pageData.getContent() != null) {
+            for (Object item : pageData.getContent()) {
+                ((Map) item).remove("password");
+            }
+        }
+        return pageData;
     }
 }
