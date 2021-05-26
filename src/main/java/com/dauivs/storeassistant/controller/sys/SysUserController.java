@@ -1,5 +1,6 @@
 package com.dauivs.storeassistant.controller.sys;
 
+import com.dauivs.storeassistant.common.SearchParameter;
 import com.dauivs.storeassistant.dao.sys.SysUserDao;
 import com.dauivs.storeassistant.common.ResponseData;
 import com.dauivs.storeassistant.model.sys.SysUser;
@@ -31,6 +32,11 @@ public class SysUserController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public ResponseData save(@RequestBody SysUser sysUser) {
         return ResponseData.success(CommonUtil.save(dao, sysUser));
+    }
+
+    @RequestMapping(value = "/page", method = RequestMethod.POST)
+    public ResponseData page(@RequestBody SearchParameter searchParameter) {
+        return ResponseData.success(dao.findPage(searchParameter));
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
