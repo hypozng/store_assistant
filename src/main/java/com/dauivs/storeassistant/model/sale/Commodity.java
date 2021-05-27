@@ -17,8 +17,11 @@ public class Commodity extends BaseModel {
     @Column(name = "image")
     private String image;
 
-    @Column(name = "price")
-    private BigDecimal price;
+    @Column(name = "sale_price")
+    private BigDecimal salePrice;
+
+    @Column(name = "purchase_price")
+    private BigDecimal purchasePrice;
 
     @Column(name = "code")
     private String code;
@@ -57,12 +60,20 @@ public class Commodity extends BaseModel {
         this.image = image;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public BigDecimal getSalePrice() {
+        return salePrice;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setSalePrice(BigDecimal salePrice) {
+        this.salePrice = salePrice;
+    }
+
+    public BigDecimal getPurchasePrice() {
+        return purchasePrice;
+    }
+
+    public void setPurchasePrice(BigDecimal purchasePrice) {
+        this.purchasePrice = purchasePrice;
     }
 
     public String getCode() {

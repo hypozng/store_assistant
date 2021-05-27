@@ -33,6 +33,10 @@ public class CommodityController {
     public ResponseData save(@RequestBody Commodity commodity) {
         if (commodity.getId() == null) {
             commodity.setAmount(0);
+        } else {
+            commodity.setAmount(null);
+            commodity.setSalePrice(null);
+            commodity.setPurchasePrice(null);
         }
         return ResponseData.success(CommonUtil.save(dao, commodity));
     }
