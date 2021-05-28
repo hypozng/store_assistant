@@ -8,8 +8,11 @@ import javax.persistence.Table;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "commodity_price_record")
-public class CommodityPriceRecord extends BaseModel {
+@Table(name = "commodity_price")
+public class CommodityPrice extends BaseModel {
+
+    @Column(name = "commodity_id")
+    private Integer commodityId;
 
     @Column(name = "sale_price")
     private BigDecimal salePrice;
@@ -19,6 +22,14 @@ public class CommodityPriceRecord extends BaseModel {
 
     @Column(name = "remark")
     private String remark;
+
+    public Integer getCommodityId() {
+        return commodityId;
+    }
+
+    public void setCommodityId(Integer commodityId) {
+        this.commodityId = commodityId;
+    }
 
     public BigDecimal getSalePrice() {
         return salePrice;

@@ -3,6 +3,7 @@ package com.dauivs.storeassistant.config;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dauivs.storeassistant.common.ResponseData;
+import com.dauivs.storeassistant.utils.ShiroUtil;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.apache.shiro.web.util.WebUtils;
@@ -16,6 +17,9 @@ public class ShiroAccessFilter extends AccessControlFilter {
 
     @Override
     protected boolean isAccessAllowed(ServletRequest servletRequest, ServletResponse servletResponse, Object mappedValue) throws Exception {
+        if (ShiroUtil.getUser() == null) {
+            return false;
+        }
         if (isLoginRequest(servletRequest, servletResponse)) {
             return true;
         }

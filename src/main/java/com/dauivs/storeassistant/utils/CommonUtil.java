@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class CommonUtil {
 
@@ -96,15 +97,28 @@ public class CommonUtil {
      * @param <ID>    实体ID数据类型
      * @return
      */
-    public static <T extends BaseModel, ID> T save(JpaRepository<T, ID> dao, T model, SysUser sysUser) {
+    public static <T extends BaseModel, ID> T save(JpaRepository<T, ID> dao, T model, SysUser sysUser, Function<T, T> callback) {
         if (dao == null || model == null) {
             return null;
         }
+        ID id = (ID) model.getId();
         prepareSave(model, sysUser);
-        if (model.getId() != null) {
-            dao.findById((ID) model.getId()).ifPresent(old -> merge(model, old));
+        if (id != null) {
+            dao.findById(id).ifPresent(old -> merge(model, old));
         }
-        return dao.saveAndFlush(model);
+        T result = dao.saveAndFlush(model);
+        if (id == null && callback != null) {
+            result = callback.apply(result);
+        }
+        return result;
+    }
+
+    public static <T extends BaseModel, ID> T save(JpaRepository<T, ID> dao, T model, SysUser sysUser) {
+        return save(dao, model, sysUser, null);
+    }
+
+    public static <T extends BaseModel, ID> T save(JpaRepository<T, ID> dao, T model, Function<T, T> callback) {
+        return save(dao, model, null, callback);
     }
 
     /**
@@ -117,7 +131,7 @@ public class CommonUtil {
      * @return
      */
     public static <T extends BaseModel, ID> T save(JpaRepository<T, ID> dao, T model) {
-        return save(dao, model, null);
+        return save(dao, model, null, null);
     }
 
     /**

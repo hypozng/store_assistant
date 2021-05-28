@@ -3,7 +3,9 @@ package com.dauivs.storeassistant.controller.sale;
 import com.dauivs.storeassistant.common.ResponseData;
 import com.dauivs.storeassistant.common.SearchParameter;
 import com.dauivs.storeassistant.dao.sale.CommodityDao;
+import com.dauivs.storeassistant.dao.sale.CommodityPriceDao;
 import com.dauivs.storeassistant.model.sale.Commodity;
+import com.dauivs.storeassistant.model.sale.CommodityPrice;
 import com.dauivs.storeassistant.utils.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 public class CommodityController {
     @Autowired
     private CommodityDao dao;
+
+    @Autowired
+    private CommodityPriceDao commodityPriceDao;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseData list() {
@@ -38,11 +43,39 @@ public class CommodityController {
             commodity.setSalePrice(null);
             commodity.setPurchasePrice(null);
         }
-        return ResponseData.success(CommonUtil.save(dao, commodity));
+        return ResponseData.success(CommonUtil.save(dao, commodity, m -> {
+            CommodityPrice commodityPriceRecord = new CommodityPrice();
+            commodityPriceRecord.setCommodityId(m.getId());
+            commodityPriceRecord.setSalePrice(m.getSalePrice());
+            commodityPriceRecord.setPurchasePrice(m.getPurchasePrice());
+            CommonUtil.save(commodityPriceDao, commodityPriceRecord);
+            return m;
+        }));
     }
     
     @RequestMapping(value = "/page", method = RequestMethod.POST)
     public ResponseData page(@RequestBody SearchParameter searchParameter) {
         return ResponseData.success(dao.queryPage(searchParameter));
+    }
+
+    @RequestMapping(value = "/price/modify", method = RequestMethod.POST)
+    public ResponseData priceModify(@RequestBody CommodityPrice commodityPrice) {
+        commodityPrice.setId(null);
+        if (commodityPrice.getCommodityId() == null) {
+            return ResponseData.fail("商品ID不能为空");
+        }
+        Commodity commodity = dao.findById(commodityPrice.getCommodityId()).orElse(null);
+        if (commodity == null) {
+            return ResponseData.fail("未找到商品信息");
+        }
+        commodity.setSalePrice(commodityPrice.getSalePrice());
+        commodity.setPurchasePrice(commodityPrice.getPurchasePrice());
+        CommonUtil.save(dao, commodity);
+        return ResponseData.success(CommonUtil.save(commodityPriceDao, commodityPrice));
+    }
+
+    @RequestMapping(value = "/price/page", method = RequestMethod.POST)
+    public ResponseData pricePage(@RequestBody SearchParameter searchParameter) {
+        return ResponseData.success(commodityPriceDao.findPage(searchParameter));
     }
 }
