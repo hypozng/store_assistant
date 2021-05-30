@@ -26,6 +26,9 @@ public class Commodity extends BaseModel {
     @Column(name = "code")
     private String code;
 
+    @Column(name = "sku")
+    private String sku;
+
     @Column(name = "amount")
     private Integer amount;
 
@@ -40,6 +43,9 @@ public class Commodity extends BaseModel {
 
     @Column(name = "order_index")
     private Integer orderIndex;
+
+    @Column(name = "detail")
+    private String detail;
 
     @Column(name = "remark")
     private String remark;
@@ -74,6 +80,14 @@ public class Commodity extends BaseModel {
 
     public void setPurchasePrice(BigDecimal purchasePrice) {
         this.purchasePrice = purchasePrice;
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
     }
 
     public String getCode() {
@@ -122,6 +136,14 @@ public class Commodity extends BaseModel {
 
     public void setOrderIndex(Integer orderIndex) {
         this.orderIndex = orderIndex;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 
     public String getRemark() {

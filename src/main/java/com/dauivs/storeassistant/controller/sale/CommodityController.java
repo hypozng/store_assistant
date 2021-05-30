@@ -20,7 +20,7 @@ public class CommodityController {
     private CommodityPriceDao commodityPriceDao;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseData list() {
+    public ResponseData list(Integer categoryId, Integer brandId, String keyword) {
         return ResponseData.success(dao.findAll());
     }
     
@@ -56,6 +56,11 @@ public class CommodityController {
     @RequestMapping(value = "/page", method = RequestMethod.POST)
     public ResponseData page(@RequestBody SearchParameter searchParameter) {
         return ResponseData.success(dao.queryPage(searchParameter));
+    }
+
+    @RequestMapping(value = "/query", method = RequestMethod.POST)
+    public ResponseData query(@RequestBody SearchParameter searchParameter) {
+        return ResponseData.success(dao.queryList(searchParameter));
     }
 
     @RequestMapping(value = "/price/modify", method = RequestMethod.POST)
