@@ -20,7 +20,7 @@ public class CommodityController {
     private CommodityPriceDao commodityPriceDao;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseData list(Integer categoryId, Integer brandId, String keyword) {
+    public ResponseData list() {
         return ResponseData.success(dao.findAll());
     }
     

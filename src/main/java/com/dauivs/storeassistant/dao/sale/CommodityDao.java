@@ -86,7 +86,8 @@ class CommodityDaoCustomImpl implements CommodityDaoCustom {
             values.add(searchParameter.getParam("brandId"));
         }
         if (searchParameter.isNotEmptyParam("keyword")) {
-            sql.append(" and (a.name like ?)");
+            sql.append(" and (a.name like ? or a.sku like ?)");
+            values.add(searchParameter.getParam("keyword", "%%%s%%"));
             values.add(searchParameter.getParam("keyword", "%%%s%%"));
         }
         return dbDao.query(sql, values);
