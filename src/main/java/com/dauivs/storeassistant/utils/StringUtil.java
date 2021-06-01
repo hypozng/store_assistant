@@ -1,9 +1,6 @@
 package com.dauivs.storeassistant.utils;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class StringUtil {
@@ -26,6 +23,14 @@ public class StringUtil {
      */
     public static boolean isEmpty(Object str) {
         return isEmpty(ConvertUtil.toStr(str));
+    }
+
+    /**
+     * 生成uuid
+     * @return
+     */
+    public static String uuid() {
+        return UUID.randomUUID().toString().replaceAll("-", "");
     }
 
     /**

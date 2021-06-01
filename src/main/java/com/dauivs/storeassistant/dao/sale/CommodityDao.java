@@ -58,6 +58,14 @@ class CommodityDaoCustomImpl implements CommodityDaoCustom {
             sql.append(" and a.price <= ?");
             values.add(searchParameter.getParam("priceMax"));
         }
+        if (searchParameter.isNotEmptyParam("sku")) {
+            sql.append(" and a.sku like ?");
+            values.add(searchParameter.getParam("sku", "%%%s%%"));
+        }
+        if (searchParameter.isNotEmptyParam("code")) {
+            sql.append(" and a.code like ?");
+            values.add(searchParameter.getParam("code", "%%%s%%"));
+        }
         return dbDao.queryPage(sql, values, searchParameter);
     }
 
