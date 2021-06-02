@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Function;
 
 public class CommonUtil {
@@ -167,5 +168,10 @@ public class CommonUtil {
         T model = optional.get();
         model.setDeleted(BaseModel.ON);
         return dao.saveAndFlush(model);
+    }
+
+    // 生成订单号
+    public static String generateOrderCode() {
+        return UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
     }
 }

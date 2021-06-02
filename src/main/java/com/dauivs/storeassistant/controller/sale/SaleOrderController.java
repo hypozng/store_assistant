@@ -15,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/sale/order")
@@ -31,6 +34,23 @@ public class SaleOrderController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseData info(@PathVariable int id) {
+        SaleOrder saleOrder = dao.findById(id).orElse(null);
+        if (saleOrder == null) {
+            return ResponseData.fail("没有找到订单信息");
+        }
+        saleOrder.setCommodities(saleOrderCommodityDao.findAllByOrderId(id));
+        String ids = saleOrder.getCommodities().stream().map(orderCommodity -> {
+            return orderCommodity == null ? null : orderCommodity.getCommodityId().toString();
+        }).filter(commodityId -> commodityId != null).collect(Collectors.joining(","));
+        List<Commodity> commodities = commodityDao.findAllByIds(ids);
+        saleOrder.getCommodities().forEach(orderCommodity -> {
+            commodities.stream()
+                    .filter(commodity -> commodity.getId().equals(orderCommodity.getCommodityId()))
+                    .findFirst()
+                    .ifPresent(commodity -> {
+                        orderCommodity.setCommodity(commodity);
+                    });
+        });
         return ResponseData.success(dao.findById(id));
     }
 
@@ -48,7 +68,10 @@ public class SaleOrderController {
         if (saleOrder.getCommodities() == null || saleOrder.getCommodities().isEmpty()) {
             return ResponseData.fail("该订单无商品信息");
         }
-        BigDecimal totalPrice = new BigDecimal(0);
+        saleOrder.setStatus(0);
+        BigDecimal orderSalePrice = BigDecimal.ZERO;
+        BigDecimal orderPurchasePrice = BigDecimal.ZERO;
+        List<Commodity> commodities = new ArrayList<>();
         for (SaleOrderCommodity orderCommodity : saleOrder.getCommodities()) {
             Commodity commodity = commodityDao.findById(orderCommodity.getCommodityId()).orElse(null);
             if (commodity == null) {
@@ -57,17 +80,27 @@ public class SaleOrderController {
             if (orderCommodity.getAmount() == null || orderCommodity.getAmount() <= 0) {
                 return ResponseData.fail("订单商品数量必须大于0 (" + commodity.getName() + ")");
             }
-            orderCommodity.setPrice(commodity.getSalePrice());
+            orderCommodity.setSalePrice(commodity.getSalePrice());
+            orderCommodity.setPurchasePrice(commodity.getPurchasePrice());
             CommonUtil.prepareSave(orderCommodity, sysUser);
-            totalPrice = totalPrice.add(commodity.getSalePrice().multiply(new BigDecimal(orderCommodity.getAmount())));
+            BigDecimal amount = new BigDecimal(orderCommodity.getAmount());
+            orderSalePrice = orderSalePrice.add(commodity.getSalePrice().multiply(amount));
+            orderPurchasePrice = orderPurchasePrice.add(commodity.getPurchasePrice().multiply(amount));
+            commodity.setAmount(commodity.getAmount() - amount.intValue());
+            commodities.add(commodity);
         }
 
-        saleOrder.setPrice(totalPrice);
+        saleOrder.setCode(CommonUtil.generateOrderCode());
+        saleOrder.setSalePrice(orderSalePrice);
+        saleOrder.setPurchasePrice(orderPurchasePrice);
         return ResponseData.success(CommonUtil.save(dao, saleOrder, order -> {
-            for(SaleOrderCommodity orderCommodity : order.getCommodities()) {
+            for (SaleOrderCommodity orderCommodity : order.getCommodities()) {
                 orderCommodity.setOrderId(order.getId());
             }
             saleOrderCommodityDao.saveAll(saleOrder.getCommodities());
+            if (!commodities.isEmpty()) {
+                commodityDao.saveAll(commodities);
+            }
             return order;
         }));
     }

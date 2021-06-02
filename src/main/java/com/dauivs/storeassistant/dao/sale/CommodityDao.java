@@ -17,6 +17,9 @@ public interface CommodityDao extends JpaRepository<Commodity, Integer>, Commodi
     @Query(value = "select * from commodity where deleted = 0", nativeQuery = true)
     List<Commodity> findAll();
 
+    @Query(value = "select * from commodity where deleted = 0 and find_in_set(id, ?1)", nativeQuery = true)
+    List<Commodity> findAllByIds(String ids);
+
 }
 
 interface CommodityDaoCustom {

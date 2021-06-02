@@ -12,8 +12,11 @@ import java.math.BigDecimal;
 @Table(name = "sale_order_commodity")
 public class SaleOrderCommodity extends BaseModel {
 
-    @Column(name = "price")
-    private BigDecimal price;
+    @Column(name = "sale_price")
+    private BigDecimal salePrice;
+
+    @Column(name = "purchase_price")
+    private BigDecimal purchasePrice;
 
     @Column(name = "amount")
     private Integer amount;
@@ -27,12 +30,20 @@ public class SaleOrderCommodity extends BaseModel {
     @Transient
     private Commodity commodity;
 
-    public BigDecimal getPrice() {
-        return price;
+    public BigDecimal getSalePrice() {
+        return salePrice;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setSalePrice(BigDecimal salePrice) {
+        this.salePrice = salePrice;
+    }
+
+    public BigDecimal getPurchasePrice() {
+        return purchasePrice;
+    }
+
+    public void setPurchasePrice(BigDecimal purchasePrice) {
+        this.purchasePrice = purchasePrice;
     }
 
     public Integer getAmount() {

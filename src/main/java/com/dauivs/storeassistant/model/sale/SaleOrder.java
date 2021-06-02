@@ -13,14 +13,20 @@ import java.util.List;
 @Table(name = "sale_order")
 public class SaleOrder extends BaseModel {
 
+    @Column(name = "code")
+    private String code;
+
     @Column(name = "status")
     private Integer status;
 
     @Column(name = "customerId")
     private Integer customerId;
 
-    @Column(name = "price")
-    private BigDecimal price;
+    @Column(name = "sale_price")
+    private BigDecimal salePrice;
+
+    @Column(name = "purchase_price")
+    private BigDecimal purchasePrice;
 
     @Column(name = "final_price")
     private BigDecimal finalPrice;
@@ -36,6 +42,14 @@ public class SaleOrder extends BaseModel {
 
     @Transient
     private List<SaleOrderCommodity> commodities;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public Integer getStatus() {
         return status;
@@ -53,12 +67,20 @@ public class SaleOrder extends BaseModel {
         this.customerId = customerId;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public BigDecimal getSalePrice() {
+        return salePrice;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setSalePrice(BigDecimal salePrice) {
+        this.salePrice = salePrice;
+    }
+
+    public BigDecimal getPurchasePrice() {
+        return purchasePrice;
+    }
+
+    public void setPurchasePrice(BigDecimal purchasePrice) {
+        this.purchasePrice = purchasePrice;
     }
 
     public BigDecimal getFinalPrice() {
