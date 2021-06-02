@@ -31,6 +31,9 @@ public class SysUserController {
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public ResponseData save(@RequestBody SysUser sysUser) {
+        if (sysUser.getId() == null) {
+            sysUser.setPassword(ShiroUtil.md5("123456"));
+        }
         return ResponseData.success(CommonUtil.save(dao, sysUser));
     }
 

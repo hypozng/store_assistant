@@ -31,8 +31,8 @@ public class SaleOrder extends BaseModel {
     @Column(name = "final_price")
     private BigDecimal finalPrice;
 
-    @Column(name = "paid_price")
-    private BigDecimal paidPrice;
+    @Column(name = "paid_amount")
+    private BigDecimal paidAmount;
 
     @Column(name = "pay_method")
     private String payMethod;
@@ -91,12 +91,12 @@ public class SaleOrder extends BaseModel {
         this.finalPrice = finalPrice;
     }
 
-    public BigDecimal getPaidPrice() {
-        return paidPrice;
+    public BigDecimal getPaidAmount() {
+        return paidAmount;
     }
 
-    public void setPaidPrice(BigDecimal paidPrice) {
-        this.paidPrice = paidPrice;
+    public void setPaidAmount(BigDecimal paidAmount) {
+        this.paidAmount = paidAmount;
     }
 
     public String getPayMethod() {

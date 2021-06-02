@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -39,17 +40,16 @@ public class SaleOrderController {
             return ResponseData.fail("没有找到订单信息");
         }
         saleOrder.setCommodities(saleOrderCommodityDao.findAllByOrderId(id));
-        String ids = saleOrder.getCommodities().stream().map(orderCommodity -> {
-            return orderCommodity == null ? null : orderCommodity.getCommodityId().toString();
-        }).filter(commodityId -> commodityId != null).collect(Collectors.joining(","));
+        String ids = saleOrder.getCommodities().stream()
+                .map(orderCommodity -> orderCommodity == null ? null : orderCommodity.getCommodityId().toString())
+                .filter(Objects::nonNull)
+                .collect(Collectors.joining(","));
         List<Commodity> commodities = commodityDao.findAllByIds(ids);
         saleOrder.getCommodities().forEach(orderCommodity -> {
             commodities.stream()
                     .filter(commodity -> commodity.getId().equals(orderCommodity.getCommodityId()))
                     .findFirst()
-                    .ifPresent(commodity -> {
-                        orderCommodity.setCommodity(commodity);
-                    });
+                    .ifPresent(orderCommodity::setCommodity);
         });
         return ResponseData.success(dao.findById(id));
     }
@@ -93,6 +93,12 @@ public class SaleOrderController {
         saleOrder.setCode(CommonUtil.generateOrderCode());
         saleOrder.setSalePrice(orderSalePrice);
         saleOrder.setPurchasePrice(orderPurchasePrice);
+        if (saleOrder.getFinalPrice() == null || saleOrder.getFinalPrice().doubleValue() == 0) {
+            saleOrder.setFinalPrice(orderSalePrice);
+        }
+        if (saleOrder.getPaidAmount() == null || saleOrder.getPaidAmount().doubleValue() == 0) {
+            saleOrder.setPaidAmount(orderSalePrice);
+        }
         return ResponseData.success(CommonUtil.save(dao, saleOrder, order -> {
             for (SaleOrderCommodity orderCommodity : order.getCommodities()) {
                 orderCommodity.setOrderId(order.getId());

@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
@@ -172,6 +174,9 @@ public class CommonUtil {
 
     // 生成订单号
     public static String generateOrderCode() {
-        return UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+        String dateStr = format.format(new Date());
+        int random = (int)(Math.random() * (9999 - 1000) + 1000);
+        return dateStr + random;
     }
 }
