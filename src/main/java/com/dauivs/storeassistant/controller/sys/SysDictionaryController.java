@@ -1,6 +1,7 @@
 package com.dauivs.storeassistant.controller.sys;
 
 import com.dauivs.storeassistant.common.ResponseData;
+import com.dauivs.storeassistant.common.SearchParameter;
 import com.dauivs.storeassistant.dao.sys.SysDictionaryDao;
 import com.dauivs.storeassistant.model.sys.SysDictionary;
 import com.dauivs.storeassistant.utils.CommonUtil;
@@ -61,13 +62,18 @@ public class SysDictionaryController {
         }));
     }
 
-    @RequestMapping(value = "/children/{id}", method = RequestMethod.GET)
-    public ResponseData children(@PathVariable int id) {
-        return ResponseData.success(dao.findAllByParentId(id));
+    @RequestMapping(value = "/page", method = RequestMethod.POST)
+    public ResponseData page(@RequestBody SearchParameter searchParameter) {
+        return ResponseData.success(dao.findPage(searchParameter));
     }
 
     @RequestMapping(value = "/group/{groupKey}", method = RequestMethod.GET)
     public ResponseData group(@PathVariable String groupKey) {
         return ResponseData.success(dao.findAllByGroupKey(groupKey));
+    }
+
+    @RequestMapping(value = "/children/{id}", method = RequestMethod.GET)
+    public ResponseData children(@PathVariable int id) {
+        return ResponseData.success(dao.findAllByParentId(id));
     }
 }
