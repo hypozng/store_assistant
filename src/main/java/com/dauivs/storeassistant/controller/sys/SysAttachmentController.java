@@ -7,6 +7,7 @@ import com.dauivs.storeassistant.utils.IOUtil;
 import com.dauivs.storeassistant.utils.StringUtil;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,6 +19,7 @@ import java.io.*;
 import java.net.URLEncoder;
 import java.sql.Timestamp;
 
+@Transactional
 @RestController
 @RequestMapping("/api/sys/attachment")
 public class SysAttachmentController {

@@ -12,6 +12,7 @@ import com.dauivs.storeassistant.model.sys.SysUser;
 import com.dauivs.storeassistant.utils.CommonUtil;
 import com.dauivs.storeassistant.utils.ShiroUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Transactional
 @RestController
 @RequestMapping("/api/sale/order")
 public class SaleOrderController {

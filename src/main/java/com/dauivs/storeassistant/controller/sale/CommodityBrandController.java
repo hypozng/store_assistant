@@ -6,8 +6,10 @@ import com.dauivs.storeassistant.dao.sale.CommodityBrandDao;
 import com.dauivs.storeassistant.model.sale.CommodityBrand;
 import com.dauivs.storeassistant.utils.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+@Transactional
 @RestController
 @RequestMapping("/api/sale/commodityBrand")
 public class CommodityBrandController {

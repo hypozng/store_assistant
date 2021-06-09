@@ -11,10 +11,14 @@ import java.sql.Timestamp;
  */
 @MappedSuperclass
 public class BaseModel {
-    /** 打开 */
+    /**
+     * 打开
+     */
     public static final int ON = 1;
 
-    /** 关闭 */
+    /**
+     * 关闭
+     */
     public static final int OFF = 0;
 
     @Id
@@ -85,4 +89,10 @@ public class BaseModel {
         this.deleted = deleted;
     }
 
+    public boolean equals(Object o) {
+        if (o instanceof BaseModel) {
+            return ((BaseModel) o).id.equals(id);
+        }
+        return super.equals(o);
+    }
 }

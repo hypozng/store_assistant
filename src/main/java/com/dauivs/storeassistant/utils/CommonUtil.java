@@ -7,10 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class CommonUtil {
 
@@ -43,6 +42,14 @@ public class CommonUtil {
             }
         }
         return newObj;
+    }
+
+    public static String joinIds(Collection<? extends BaseModel> models) {
+        if (models == null) {
+            return "";
+        }
+        return models.stream().map(model -> Objects.isNull(model) ? null : ConvertUtil.toStr(model.getId()))
+                .filter(Objects::nonNull).collect(Collectors.joining(","));
     }
 
     /**
