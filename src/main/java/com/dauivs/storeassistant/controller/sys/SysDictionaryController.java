@@ -9,10 +9,8 @@ import com.dauivs.storeassistant.utils.CommonUtil;
 import com.dauivs.storeassistant.utils.ConvertUtil;
 import com.dauivs.storeassistant.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.comparator.Comparators;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,6 +33,11 @@ public class SysDictionaryController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseData delete(@PathVariable int id) {
+        dao.findById(id).ifPresent(sysDictionary -> {
+            List<SysDictionary> children = dao.findAllByGroupKey(sysDictionary.getGroupKey());
+            children.forEach(child -> child.setDeleted(BaseModel.ON));
+            dao.saveAll(children);
+        });
         return ResponseData.success(CommonUtil.delete(dao, id));
     }
 
