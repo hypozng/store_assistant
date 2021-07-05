@@ -24,7 +24,7 @@ public interface SysRoleDao extends JpaRepository<SysRole, Integer>, SysRoleDaoC
 }
 
 interface SysRoleDaoCustom {
-    PageData<SysRole> findPage(SearchParameter searchParameter);
+    PageData findPage(SearchParameter searchParameter);
 }
 
 class SysRoleDaoCustomImpl implements SysRoleDaoCustom {
@@ -33,28 +33,22 @@ class SysRoleDaoCustomImpl implements SysRoleDaoCustom {
     private DBDao dbDao;
 
     @Override
-    public PageData<SysRole> findPage(SearchParameter searchParameter) {
+    public PageData findPage(SearchParameter searchParameter) {
         StringBuilder sql = new StringBuilder("select * from sys_role where deleted = 0");
-        List<Object> values = new ArrayList<>();
         if (searchParameter.getParams() != null) {
-            if (!StringUtil.isEmpty(searchParameter.getParams().get("name"))) {
+            if (searchParameter.extractParam("name", SearchParameter.LIKE)) {
                 sql.append(" and name like ?");
-                values.add("%" + searchParameter.getParams().get("name") + "%");
             }
-            if (!StringUtil.isEmpty(searchParameter.getParams().get("code"))) {
+            if (searchParameter.extractParam("code", SearchParameter.LIKE)) {
                 sql.append(" and code like ?");
-                values.add("%" + searchParameter.getParams().get("code") + "%");
             }
-            if (!StringUtil.isEmpty(searchParameter.getParams().get("remark"))) {
+            if (searchParameter.extractParam("remark", SearchParameter.LIKE)) {
                 sql.append(" and remark like ?");
-                values.add("%" + searchParameter.getParams().get("remark") + "%");
             }
-            if (!StringUtil.isEmpty(searchParameter.getParams().get("disabled"))) {
+            if (searchParameter.extractParam("disabled")) {
                 sql.append(" and disabled = ?");
-                values.add(searchParameter.getParams().get("disabled"));
             }
         }
-
-        return dbDao.queryPage(sql, values, searchParameter);
+        return dbDao.queryPage(sql, searchParameter);
     }
 }

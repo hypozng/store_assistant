@@ -59,9 +59,9 @@ public class DBDao {
      * @param params
      * @return
      */
-    public Map<String, Object> querySingle(CharSequence sql, Collection<?> params) {
+    public Map querySingle(CharSequence sql, Collection<?> params) {
         Query query = createQuery(sql, params);
-        return StringUtil.lineToHump((Map<String, Object>) query.getSingleResult());
+        return StringUtil.lineToHump((Map) query.getSingleResult());
     }
 
     /**
@@ -69,7 +69,7 @@ public class DBDao {
      *
      * @return
      */
-    public PageData queryPage(CharSequence sql, Collection<?> params, SearchParameter searchParameter) {
+    public PageData queryPage(CharSequence sql, SearchParameter searchParameter) {
         long page = 1;
         if (searchParameter.getPage() != null && searchParameter.getPage() > 0) {
             page = searchParameter.getPage();
@@ -89,10 +89,10 @@ public class DBDao {
         s.append((page - 1) * size);
         s.append(", ");
         s.append(size);
-        List list = query(s, params);
+        List list = query(s, searchParameter.getValues());
 
         String countSql = "select count(*) num from (" + sql + ") t";
-        Long total = ConvertUtil.toLong(querySingle(countSql, params).get("num"));
+        Long total = ConvertUtil.toLong(querySingle(countSql, searchParameter.getValues()).get("num"));
 
         return new PageData(list, total, page, size);
     }

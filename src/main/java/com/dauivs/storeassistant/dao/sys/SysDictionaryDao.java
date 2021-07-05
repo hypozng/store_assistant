@@ -6,11 +6,8 @@ import com.dauivs.storeassistant.dao.DBDao;
 import com.dauivs.storeassistant.model.sys.SysDictionary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 
 public interface SysDictionaryDao extends JpaRepository<SysDictionary, Integer>, SysDictionaryDaoCustom {
@@ -44,23 +41,19 @@ class SysDictionaryDaoCustomImpl implements SysDictionaryDaoCustom {
     @Override
     public PageData findPage(SearchParameter searchParameter) {
         StringBuilder sql = new StringBuilder();
-        List<Object> values = new ArrayList<>();
         sql.append("select a.*, c.name create_user_name, u.name update_user_name from sys_dictionary a");
         sql.append(" left join sys_user c on c.id = a.create_user_id");
         sql.append(" left join sys_user u on u.id = a.update_user_id");
         sql.append(" where a.deleted = 0 and a.parent_id = 0");
-        if (searchParameter.isNotEmptyParam("groupKey")) {
+        if (searchParameter.extractParam("groupKey", SearchParameter.LIKE)) {
             sql.append(" and a.group_key like ?");
-            values.add(searchParameter.getParam("groupKey", "%%%s%%"));
         }
-        if (searchParameter.isNotEmptyParam("name")) {
+        if (searchParameter.extractParam("name", SearchParameter.LIKE)) {
             sql.append(" and a.name like ?");
-            values.add(searchParameter.getParam("name", "%%%s%%"));
         }
-        if (searchParameter.isNotEmptyParam("备注")) {
+        if (searchParameter.extractParam("remark", SearchParameter.LIKE)) {
             sql.append(" and a.remark like ?");
-            values.add(searchParameter.getParam("remark", "%%%s%%"));
         }
-        return dbDao.queryPage(sql, values, searchParameter);
+        return dbDao.queryPage(sql, searchParameter);
     }
 }

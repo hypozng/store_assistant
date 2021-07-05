@@ -25,7 +25,7 @@ public interface CommodityDao extends JpaRepository<Commodity, Integer>, Commodi
 interface CommodityDaoCustom {
     PageData queryPage(SearchParameter searchParameter);
 
-    List<Map> queryList(SearchParameter searchParameter);
+    List queryList(SearchParameter searchParameter);
 }
 
 class CommodityDaoCustomImpl implements CommodityDaoCustom {
@@ -40,59 +40,47 @@ class CommodityDaoCustomImpl implements CommodityDaoCustom {
                 " left join commodity_brand brand on brand.id = a.brand_id" +
                 " left join commodity_category category on category.id = a.category_id" +
                 " where a.deleted = 0");
-        List<Object> values = new ArrayList<>();
-        if (searchParameter.isNotEmptyParam("brandId")) {
+        if (searchParameter.extractParam("brandId")) {
             sql.append(" and a.brand_id = ?");
-            values.add(searchParameter.getParam("brandId"));
         }
-        if (searchParameter.isNotEmptyParam("categoryId")) {
+        if (searchParameter.extractParam("categoryId")) {
             sql.append(" and a.category_id = ?");
-            values.add(searchParameter.getParam("categoryId"));
         }
-        if (searchParameter.isNotEmptyParam("name")) {
+        if (searchParameter.extractParam("name", SearchParameter.LIKE)) {
             sql.append(" and a.name like ?");
-            values.add(searchParameter.getParam("name", "%%%s%%"));
         }
-        if (searchParameter.isNotEmptyParam("priceMin")) {
+        if (searchParameter.extractParam("priceMin")) {
             sql.append(" and a.price >= ?");
-            values.add(searchParameter.getParam("priceMin"));
         }
-        if (searchParameter.isNotEmptyParam("priceMax")) {
+        if (searchParameter.extractParam("priceMax")) {
             sql.append(" and a.price <= ?");
-            values.add(searchParameter.getParam("priceMax"));
         }
-        if (searchParameter.isNotEmptyParam("sku")) {
+        if (searchParameter.extractParam("sku", SearchParameter.LIKE)) {
             sql.append(" and a.sku like ?");
-            values.add(searchParameter.getParam("sku", "%%%s%%"));
         }
-        if (searchParameter.isNotEmptyParam("code")) {
+        if (searchParameter.extractParam("code", SearchParameter.LIKE)) {
             sql.append(" and a.code like ?");
-            values.add(searchParameter.getParam("code", "%%%s%%"));
         }
-        return dbDao.queryPage(sql, values, searchParameter);
+        return dbDao.queryPage(sql, searchParameter);
     }
 
     @Override
-    public List<Map> queryList(SearchParameter searchParameter) {
+    public List queryList(SearchParameter searchParameter) {
         StringBuilder sql = new StringBuilder();
-        List<Object> values = new ArrayList<>();
         sql.append("select a.*, brand.name brand_name, category.name category_name from commodity a" +
                 " left join commodity_brand brand on brand.id = a.brand_id" +
                 " left join commodity_category category on category.id = a.category_id" +
                 " where a.deleted = 0");
-        if (searchParameter.isNotEmptyParam("categoryId")) {
+        if (searchParameter.extractParam("categoryId")) {
             sql.append(" and a.category_id in (select id from commodity_category where find_in_set(?, path))");
-            values.add(searchParameter.getParam("categoryId"));
         }
-        if (searchParameter.isNotEmptyParam("brandId")) {
+        if (searchParameter.extractParam("brandId")) {
             sql.append(" and a.brand_id = ?");
-            values.add(searchParameter.getParam("brandId"));
         }
-        if (searchParameter.isNotEmptyParam("keyword")) {
+        if (searchParameter.extractParam("keyword", SearchParameter.LIKE)) {
             sql.append(" and (a.name like ? or a.sku like ?)");
-            values.add(searchParameter.getParam("keyword", "%%%s%%"));
-            values.add(searchParameter.getParam("keyword", "%%%s%%"));
+            searchParameter.addValue(searchParameter.getParam("keyword", SearchParameter.LIKE));
         }
-        return dbDao.query(sql, values);
+        return dbDao.query(sql, searchParameter.getValues());
     }
 }

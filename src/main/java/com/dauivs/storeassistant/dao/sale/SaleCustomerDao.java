@@ -7,9 +7,6 @@ import com.dauivs.storeassistant.model.sale.SaleCustomer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public interface SaleCustomerDao extends JpaRepository<SaleCustomer, Integer>, SaleCustomerDaoCustom {
 }
 
@@ -25,28 +22,22 @@ class SaleCustomerDaoCustomImpl implements SaleCustomerDaoCustom {
     @Override
     public PageData findPage(SearchParameter searchParameter) {
         StringBuilder sql = new StringBuilder();
-        List<Object> values = new ArrayList<>();
         sql.append("select a.* from sale_customer a where a.deleted = 0");
-        if (searchParameter.isNotEmptyParam("name")) {
+        if (searchParameter.extractParam("name", SearchParameter.LIKE)) {
             sql.append(" and a.name like ?");
-            values.add(searchParameter.getParam("name", "%%%s%%"));
         }
-        if (searchParameter.isNotEmptyParam("gender")) {
+        if (searchParameter.extractParam("gender")) {
             sql.append(" and a.gender = ?");
-            values.add(searchParameter.getParam("gender"));
         }
-        if (searchParameter.isNotEmptyParam("phone")) {
+        if (searchParameter.extractParam("phone", SearchParameter.LIKE)) {
             sql.append(" and a.phone like ?");
-            values.add(searchParameter.getParam("phone", "%%%s%%"));
         }
-        if (searchParameter.isNotEmptyParam("idcard")) {
+        if (searchParameter.extractParam("idcard", SearchParameter.LIKE)) {
             sql.append(" and a.idcard like ?");
-            values.add(searchParameter.getParam("idcard", "%%%s%%"));
         }
-        if (searchParameter.isNotEmptyParam("address")) {
+        if (searchParameter.extractParam("address", SearchParameter.LIKE)) {
             sql.append(" and a.address like ?");
-            values.add(searchParameter.getParam("address", "%%%s%%"));
         }
-        return dbDao.queryPage(sql, values, searchParameter);
+        return dbDao.queryPage(sql, searchParameter);
     }
 }

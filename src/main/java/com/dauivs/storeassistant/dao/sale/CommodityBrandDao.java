@@ -30,12 +30,10 @@ class CommodityBrandDaoCustomImpl implements CommodityBrandDaoCustom {
     @Override
     public PageData queryPage(SearchParameter searchParameter) {
         StringBuilder sql = new StringBuilder();
-        List<Object> values = new ArrayList<>();
         sql.append("select * from commodity_brand where deleted = 0");
-        if (searchParameter.isNotEmptyParam("name")) {
+        if (searchParameter.extractParam("name", SearchParameter.LIKE)) {
             sql.append(" and name like ?");
-            values.add(searchParameter.getParam("name", "%%%s%%"));
         }
-        return dbDao.queryPage(sql, values, searchParameter);
+        return dbDao.queryPage(sql, searchParameter);
     }
 }

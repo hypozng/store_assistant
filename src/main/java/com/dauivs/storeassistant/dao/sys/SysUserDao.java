@@ -39,13 +39,11 @@ class SysUserDaoCustomImpl implements SysUserDaoCustom {
     @Override
     public PageData findPage(SearchParameter searchParameter) {
         StringBuilder sql = new StringBuilder();
-        List<Object> values = new ArrayList<>();
         sql.append("select * from sys_user where deleted = 0");
-        if (searchParameter.isNotEmptyParam("user")) {
+        if (searchParameter.extractParam("user", SearchParameter.LIKE)) {
             sql.append(" and user like ?");
-            values.add(searchParameter.getParam("user", "%%%s%%"));
         }
-        PageData pageData = dbDao.queryPage(sql, values, searchParameter);
+        PageData pageData = dbDao.queryPage(sql, searchParameter);
         if (pageData.getContent() != null) {
             for (Object item : pageData.getContent()) {
                 ((Map) item).remove("password");

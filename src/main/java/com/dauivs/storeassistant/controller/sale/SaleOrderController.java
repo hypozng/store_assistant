@@ -79,7 +79,7 @@ public class SaleOrderController {
             if (commodity == null) {
                 return ResponseData.fail("没有找到商品信息(id:" + orderCommodity.getCommodityId() + ")");
             }
-            if (orderCommodity.getAmount() == null || orderCommodity.getAmount() <= 0) {
+            if (orderCommodity.getAmount() == null || orderCommodity.getAmount().intValue() <= 0) {
                 return ResponseData.fail("订单商品数量必须大于0 (" + commodity.getName() + ")");
             }
             orderCommodity.setSalePrice(commodity.getSalePrice());
@@ -88,7 +88,7 @@ public class SaleOrderController {
             BigDecimal amount = new BigDecimal(orderCommodity.getAmount());
             orderSalePrice = orderSalePrice.add(commodity.getSalePrice().multiply(amount));
             orderPurchasePrice = orderPurchasePrice.add(commodity.getPurchasePrice().multiply(amount));
-            commodity.setAmount(commodity.getAmount() - amount.intValue());
+            commodity.setAmount(commodity.getAmount().subtract(orderCommodity.getAmount()));
             commodities.add(commodity);
         }
 

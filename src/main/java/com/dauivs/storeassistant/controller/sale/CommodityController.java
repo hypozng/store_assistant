@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
+
 @Transactional
 @RestController
 @RequestMapping("/api/sale/commodity")
@@ -39,7 +41,7 @@ public class CommodityController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public ResponseData save(@RequestBody Commodity commodity) {
         if (commodity.getId() == null) {
-            commodity.setAmount(0);
+            commodity.setAmount(BigInteger.ZERO);
         } else {
             commodity.setAmount(null);
             commodity.setSalePrice(null);

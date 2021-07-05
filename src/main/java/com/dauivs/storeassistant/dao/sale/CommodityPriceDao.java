@@ -26,28 +26,22 @@ class CommodityPriceDaoCustomImpl implements CommodityPriceDaoCustom {
     @Override
     public PageData findPage(SearchParameter searchParameter) {
         StringBuilder sql = new StringBuilder();
-        List<Object> values = new ArrayList<>();
         sql.append("select * from commodity_price where deleted = 0");
-        if (searchParameter.isNotEmptyParam("commodityId")) {
+        if (searchParameter.extractParam("commodityId")) {
             sql.append(" and commodity_id = ?");
-            values.add(searchParameter.getParam("commodityId"));
         }
-        if (searchParameter.isNotEmptyParam("salePriceMin")) {
+        if (searchParameter.extractParam("salePriceMin")) {
             sql.append(" and sale_price >= ?");
-            values.add(searchParameter.getParam("salePriceMin"));
         }
-        if (searchParameter.isNotEmptyParam("salePriceMax")) {
+        if (searchParameter.extractParam("salePriceMax")) {
             sql.append(" and sale_price <= ?");
-            values.add(searchParameter.getParam("salePriceMax"));
         }
-        if (searchParameter.isNotEmptyParam("purchasePriceMin")) {
+        if (searchParameter.extractParam("purchasePriceMin")) {
             sql.append(" and purchase_price >= ?");
-            values.add(searchParameter.getParam("purchasePriceMin"));
         }
-        if (searchParameter.isNotEmptyParam("purchasePriceMax")) {
+        if (searchParameter.extractParam("purchasePriceMax")) {
             sql.append(" and purchase_price <= ?");
-            values.add(searchParameter.getParam("purchasePriceMax"));
         }
-        return dbDao.queryPage(sql, values, searchParameter);
+        return dbDao.queryPage(sql, searchParameter);
     }
 }

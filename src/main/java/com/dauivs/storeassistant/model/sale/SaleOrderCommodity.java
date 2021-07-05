@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 @Entity
 @Table(name = "sale_order_commodity")
@@ -19,7 +20,7 @@ public class SaleOrderCommodity extends BaseModel {
     private BigDecimal purchasePrice;
 
     @Column(name = "amount")
-    private Integer amount;
+    private BigInteger amount;
 
     @Column(name = "order_id")
     private Integer orderId;
@@ -46,11 +47,11 @@ public class SaleOrderCommodity extends BaseModel {
         this.purchasePrice = purchasePrice;
     }
 
-    public Integer getAmount() {
+    public BigInteger getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(BigInteger amount) {
         this.amount = amount;
     }
 
