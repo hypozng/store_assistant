@@ -13,12 +13,12 @@ public class WarehouseOrder extends BaseModel {
     /**
      * 入库
      */
-    public static final Integer TYPE_PUT = 1;
+    public static final int TYPE_PUT = 1;
 
     /**
      * 出库
      */
-    public static final Integer TYPE_TAKE = 2;
+    public static final int TYPE_TAKE = 2;
 
     @Column(name = "commodity_id")
     private Integer commodityId;
