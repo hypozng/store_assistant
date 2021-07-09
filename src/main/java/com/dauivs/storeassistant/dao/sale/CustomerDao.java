@@ -3,18 +3,18 @@ package com.dauivs.storeassistant.dao.sale;
 import com.dauivs.storeassistant.common.PageData;
 import com.dauivs.storeassistant.common.SearchParameter;
 import com.dauivs.storeassistant.dao.DBDao;
-import com.dauivs.storeassistant.model.sale.SaleCustomer;
+import com.dauivs.storeassistant.model.sale.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface SaleCustomerDao extends JpaRepository<SaleCustomer, Integer>, SaleCustomerDaoCustom {
+public interface CustomerDao extends JpaRepository<Customer, Integer>, CustomerDaoCustom {
 }
 
-interface SaleCustomerDaoCustom {
+interface CustomerDaoCustom {
     PageData findPage(SearchParameter searchParameter);
 }
 
-class SaleCustomerDaoCustomImpl implements SaleCustomerDaoCustom {
+class CustomerDaoCustomImpl implements CustomerDaoCustom {
 
     @Autowired
     private DBDao dbDao;
@@ -22,7 +22,7 @@ class SaleCustomerDaoCustomImpl implements SaleCustomerDaoCustom {
     @Override
     public PageData findPage(SearchParameter searchParameter) {
         StringBuilder sql = new StringBuilder();
-        sql.append("select a.* from sale_customer a where a.deleted = 0");
+        sql.append("select a.* from customer a where a.deleted = 0");
         if (searchParameter.extractParam("name", SearchParameter.LIKE)) {
             sql.append(" and a.name like ?");
         }

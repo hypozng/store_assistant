@@ -8,8 +8,8 @@ import javax.persistence.Table;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "sale_customer")
-public class SaleCustomer extends BaseModel {
+@Table(name = "customer")
+public class Customer extends BaseModel {
 
     @Column(name = "name")
     private String name;
