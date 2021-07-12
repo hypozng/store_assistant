@@ -38,6 +38,12 @@ class CustomerDaoCustomImpl implements CustomerDaoCustom {
         if (searchParameter.extractParam("address", SearchParameter.LIKE)) {
             sql.append(" and a.address like ?");
         }
+        if (searchParameter.extractParam("keyword", SearchParameter.LIKE)) {
+            sql.append(" and (a.name like ? or a.phone like ? or a.idcard like ? or a.address like ?)");
+            searchParameter.extractParam("keyword", SearchParameter.LIKE);
+            searchParameter.extractParam("keyword", SearchParameter.LIKE);
+            searchParameter.extractParam("keyword", SearchParameter.LIKE);
+        }
         return dbDao.queryPage(sql, searchParameter);
     }
 }

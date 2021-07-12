@@ -34,4 +34,5 @@ public class CustomController {
     public ResponseData page(@RequestBody SearchParameter searchParameter) {
         return ResponseData.success(dao.findPage(searchParameter));
     }
+
 }
