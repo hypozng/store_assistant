@@ -43,6 +43,9 @@ public class SaleOrder extends BaseModel {
     @Transient
     private List<SaleOrderCommodity> commodities;
 
+    @Transient
+    private Customer customer;
+
     public String getCode() {
         return code;
     }
@@ -121,5 +124,13 @@ public class SaleOrder extends BaseModel {
 
     public void setCommodities(List<SaleOrderCommodity> commodities) {
         this.commodities = commodities;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }

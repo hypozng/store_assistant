@@ -3,6 +3,7 @@ package com.dauivs.storeassistant.controller.sale;
 import com.dauivs.storeassistant.common.ResponseData;
 import com.dauivs.storeassistant.common.SearchParameter;
 import com.dauivs.storeassistant.dao.sale.CommodityDao;
+import com.dauivs.storeassistant.dao.sale.CustomerDao;
 import com.dauivs.storeassistant.dao.sale.SaleOrderCommodityDao;
 import com.dauivs.storeassistant.dao.sale.SaleOrderDao;
 import com.dauivs.storeassistant.model.sale.Commodity;
@@ -35,6 +36,9 @@ public class SaleOrderController {
     @Autowired
     private SaleOrderCommodityDao saleOrderCommodityDao;
 
+    @Autowired
+    private CustomerDao customerDao;
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseData info(@PathVariable int id) {
         SaleOrder saleOrder = dao.findById(id).orElse(null);
@@ -53,7 +57,10 @@ public class SaleOrderController {
                     .findFirst()
                     .ifPresent(orderCommodity::setCommodity);
         });
-        return ResponseData.success(dao.findById(id));
+        if (saleOrder.getCustomerId() != null) {
+            customerDao.findById(saleOrder.getCustomerId()).ifPresent(saleOrder::setCustomer);
+        }
+        return ResponseData.success(saleOrder);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

@@ -16,6 +16,7 @@ public interface SaleOrderDao extends JpaRepository<SaleOrder, Integer>, SaleOrd
 interface SaleOrderDaoCustom {
     /**
      * 查询分页数据
+     *
      * @param searchParameter
      * @return
      */
@@ -30,7 +31,10 @@ class SaleOrderDaoCustomImpl implements SaleOrderDaoCustom {
     @Override
     public PageData findPage(SearchParameter searchParameter) {
         StringBuilder sql = new StringBuilder();
-        sql.append("select a.* from sale_order a where a.deleted = 0");
+        sql.append("select a.*, c.name, c.gender, c.phone, c.address");
+        sql.append(" from sale_order a");
+        sql.append(" left join customer c on c.deleted = 0 and c.id = a.customer_id");
+        sql.append(" where a.deleted = 0");
         if (searchParameter.extractParam("code", SearchParameter.LIKE)) {
             sql.append(" and a.code like ?");
         }
