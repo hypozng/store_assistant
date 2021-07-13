@@ -47,13 +47,14 @@ public class SaleOrderController {
         }
         saleOrder.setCommodities(saleOrderCommodityDao.findAllByOrderId(id));
         String ids = saleOrder.getCommodities().stream()
-                .map(orderCommodity -> orderCommodity == null ? null : orderCommodity.getCommodityId().toString())
                 .filter(Objects::nonNull)
+                .map(SaleOrderCommodity::getCommodityId)
+                .map(Objects::toString)
                 .collect(Collectors.joining(","));
         List<Commodity> commodities = commodityDao.findAllByIds(ids);
         saleOrder.getCommodities().forEach(orderCommodity -> {
             commodities.stream()
-                    .filter(commodity -> commodity.getId().equals(orderCommodity.getCommodityId()))
+                    .filter(commodity -> Objects.equals(commodity.getId(), orderCommodity.getCommodityId()))
                     .findFirst()
                     .ifPresent(orderCommodity::setCommodity);
         });

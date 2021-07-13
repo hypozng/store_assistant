@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/sale/customer")
-public class CustomController {
+public class CustomerController {
 
     @Autowired
     private CustomerDao dao;

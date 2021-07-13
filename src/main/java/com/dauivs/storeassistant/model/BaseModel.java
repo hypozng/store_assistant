@@ -89,6 +89,21 @@ public class BaseModel {
         this.deleted = deleted;
     }
 
+    public void init() {
+        if (createTime == null) {
+            createTime = new Timestamp(System.currentTimeMillis());
+        }
+        this.deleted = OFF;
+    }
+
+    public void delete() {
+        this.deleted = ON;
+    }
+
+    public void undelete() {
+        this.deleted = OFF;
+    }
+
     public boolean equals(Object o) {
         if (o instanceof BaseModel) {
             return ((BaseModel) o).id.equals(id);

@@ -44,12 +44,18 @@ public class CommonUtil {
         return newObj;
     }
 
+    public static List<Integer> toIdList(Collection<? extends BaseModel> models) {
+        if (models == null || models.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return models.stream().map(BaseModel::getId).collect(Collectors.toList());
+    }
+
     public static String joinIds(Collection<? extends BaseModel> models) {
-        if (models == null) {
+        if (models == null || models.isEmpty()) {
             return "";
         }
-        return models.stream().map(model -> Objects.isNull(model) ? null : ConvertUtil.toStr(model.getId()))
-                .filter(Objects::nonNull).collect(Collectors.joining(","));
+        return models.stream().map(Objects::toString).collect(Collectors.joining(","));
     }
 
     /**
@@ -68,13 +74,10 @@ public class CommonUtil {
         if (model == null) {
             return null;
         }
-        if (sysUser == null) {
-            sysUser = ShiroUtil.getUser();
-        }
+        sysUser = Optional.ofNullable(sysUser).orElseGet(ShiroUtil::getUser);
         if (model.getId() == null) {
             model.setCreateUserId(sysUser.getId());
-            model.setCreateTime(new Timestamp(System.currentTimeMillis()));
-            model.setDeleted(BaseModel.OFF);
+            model.init();
         } else {
             model.setUpdateUserId(sysUser.getId());
             model.setUpdateTime(new Timestamp(System.currentTimeMillis()));
@@ -111,8 +114,8 @@ public class CommonUtil {
         if (dao == null || model == null) {
             return null;
         }
-        ID id = (ID) model.getId();
         prepareSave(model, sysUser);
+        ID id = (ID) model.getId();
         if (id != null) {
             dao.findById(id).ifPresent(old -> merge(model, old));
         }
@@ -145,22 +148,6 @@ public class CommonUtil {
     }
 
     /**
-     * 对要删除的实体数据做一些准备工作
-     * 将实体数据的deleted字段设置为“已删除”状态
-     *
-     * @param dao  实体数据存储接口
-     * @param id   实体数据ID
-     * @param <T>  实体数据类型
-     * @param <ID> 实体ID数据类型
-     * @return
-     */
-    public static <T extends BaseModel, ID> Optional<T> prepareDelete(JpaRepository<T, ID> dao, ID id) {
-        Optional<T> optional = dao.findById(id);
-        optional.ifPresent(o -> o.setDeleted(BaseModel.ON));
-        return optional;
-    }
-
-    /**
      * 根据提供的dao和id执行数据删除操作
      *
      * @param dao  实体数据存储接口
@@ -183,7 +170,7 @@ public class CommonUtil {
     public static String generateOrderCode() {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
         String dateStr = format.format(new Date());
-        int random = (int)(Math.random() * (9999 - 1000) + 1000);
+        int random = (int) (Math.random() * (9999 - 1000) + 1000);
         return dateStr + random;
     }
 }
