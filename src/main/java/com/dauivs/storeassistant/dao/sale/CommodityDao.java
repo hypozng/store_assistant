@@ -23,9 +23,9 @@ public interface CommodityDao extends JpaRepository<Commodity, Integer>, Commodi
 }
 
 interface CommodityDaoCustom {
-    PageData queryPage(SearchParameter searchParameter);
 
-    List queryList(SearchParameter searchParameter);
+    PageData findPage(SearchParameter searchParameter);
+
 }
 
 class CommodityDaoCustomImpl implements CommodityDaoCustom {
@@ -34,7 +34,7 @@ class CommodityDaoCustomImpl implements CommodityDaoCustom {
     private DBDao dbDao;
 
     @Override
-    public PageData queryPage(SearchParameter searchParameter) {
+    public PageData findPage(SearchParameter searchParameter) {
         StringBuilder sql = new StringBuilder();
         sql.append("select a.*, brand.name brand_name, category.name category_name from commodity a" +
                 " left join commodity_brand brand on brand.id = a.brand_id" +
@@ -61,26 +61,15 @@ class CommodityDaoCustomImpl implements CommodityDaoCustom {
         if (searchParameter.extractParam("code", SearchParameter.LIKE)) {
             sql.append(" and a.code like ?");
         }
-        return dbDao.queryPage(sql, searchParameter);
-    }
-
-    @Override
-    public List queryList(SearchParameter searchParameter) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("select a.*, brand.name brand_name, category.name category_name from commodity a" +
-                " left join commodity_brand brand on brand.id = a.brand_id" +
-                " left join commodity_category category on category.id = a.category_id" +
-                " where a.deleted = 0");
-        if (searchParameter.extractParam("categoryId")) {
-            sql.append(" and a.category_id in (select id from commodity_category where find_in_set(?, path))");
-        }
-        if (searchParameter.extractParam("brandId")) {
-            sql.append(" and a.brand_id = ?");
+        if (searchParameter.extractParam("detail", searchParameter.LIKE)) {
+            sql.append(" and a.detail like ?");
         }
         if (searchParameter.extractParam("keyword", SearchParameter.LIKE)) {
-            sql.append(" and (a.name like ? or a.sku like ?)");
-            searchParameter.addValue(searchParameter.getParam("keyword", SearchParameter.LIKE));
+            sql.append(" and (a.name like ? or a.sku like ? or a.code like ? or a.detail like ?)");
+            searchParameter.extractParam("keyword", SearchParameter.LIKE);
+            searchParameter.extractParam("keyword", SearchParameter.LIKE);
+            searchParameter.extractParam("keyword", SearchParameter.LIKE);
         }
-        return dbDao.query(sql, searchParameter.getValues());
+        return dbDao.queryPage(sql, searchParameter);
     }
 }

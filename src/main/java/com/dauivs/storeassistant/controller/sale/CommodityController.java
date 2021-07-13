@@ -59,12 +59,7 @@ public class CommodityController {
     
     @RequestMapping(value = "/page", method = RequestMethod.POST)
     public ResponseData page(@RequestBody SearchParameter searchParameter) {
-        return ResponseData.success(dao.queryPage(searchParameter));
-    }
-
-    @RequestMapping(value = "/query", method = RequestMethod.POST)
-    public ResponseData query(@RequestBody SearchParameter searchParameter) {
-        return ResponseData.success(dao.queryList(searchParameter));
+        return ResponseData.success(dao.findPage(searchParameter));
     }
 
     @RequestMapping(value = "/price/modify", method = RequestMethod.POST)
