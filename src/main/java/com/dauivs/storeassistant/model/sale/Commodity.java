@@ -30,6 +30,9 @@ public class Commodity extends BaseModel {
     @Column(name = "sku")
     private String sku;
 
+    @Column(name = "spare_sku")
+    private String spareSku;
+
     @Column(name = "amount")
     private BigInteger amount;
 
@@ -47,6 +50,9 @@ public class Commodity extends BaseModel {
 
     @Column(name = "detail")
     private String detail;
+
+    @Column(name = "url")
+    private String url;
 
     @Column(name = "remark")
     private String remark;
@@ -89,6 +95,14 @@ public class Commodity extends BaseModel {
 
     public void setSku(String sku) {
         this.sku = sku;
+    }
+
+    public String getSpareSku() {
+        return spareSku;
+    }
+
+    public void setSpareSku(String spareSku) {
+        this.spareSku = spareSku;
     }
 
     public String getCode() {
@@ -145,6 +159,14 @@ public class Commodity extends BaseModel {
 
     public void setDetail(String detail) {
         this.detail = detail;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getRemark() {

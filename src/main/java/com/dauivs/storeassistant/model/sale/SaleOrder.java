@@ -37,6 +37,15 @@ public class SaleOrder extends BaseModel {
     @Column(name = "pay_method")
     private String payMethod;
 
+    @Column(name = "distribution_mode")
+    private String distributionMode;
+
+    @Column(name = "phone")
+    private String phone;
+
+    @Column(name = "address")
+    private String address;
+
     @Column(name = "remark")
     private String remark;
 
@@ -108,6 +117,30 @@ public class SaleOrder extends BaseModel {
 
     public void setPayMethod(String payMethod) {
         this.payMethod = payMethod;
+    }
+
+    public String getDistributionMode() {
+        return distributionMode;
+    }
+
+    public void setDistributionMode(String distributionMode) {
+        this.distributionMode = distributionMode;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getRemark() {
