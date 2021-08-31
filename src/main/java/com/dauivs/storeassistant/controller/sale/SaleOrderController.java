@@ -7,11 +7,13 @@ import com.dauivs.storeassistant.dao.sale.CustomerDao;
 import com.dauivs.storeassistant.dao.sale.SaleOrderCommodityDao;
 import com.dauivs.storeassistant.dao.sale.SaleOrderDao;
 import com.dauivs.storeassistant.model.sale.Commodity;
+import com.dauivs.storeassistant.model.sale.Customer;
 import com.dauivs.storeassistant.model.sale.SaleOrder;
 import com.dauivs.storeassistant.model.sale.SaleOrderCommodity;
 import com.dauivs.storeassistant.model.sys.SysUser;
 import com.dauivs.storeassistant.utils.CommonUtil;
 import com.dauivs.storeassistant.utils.ShiroUtil;
+import com.dauivs.storeassistant.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -71,6 +73,17 @@ public class SaleOrderController {
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public ResponseData save(@RequestBody SaleOrder saleOrder) {
+        if (!StringUtil.isEmpty(saleOrder.getTel())) {
+            Customer customer = customerDao.findByTel(saleOrder.getTel());
+            if (customer == null) {
+                customer = new Customer();
+                customer.setTel(saleOrder.getTel());
+            }
+            customer.setName(saleOrder.getName());
+            customer.setAddress(saleOrder.getAddress());
+            customer = CommonUtil.save(customerDao, customer);
+            saleOrder.setCustomerId(customer.getId());
+        }
         SysUser sysUser = ShiroUtil.getUser();
         if (saleOrder.getCommodities() != null) {
             saleOrder.getCommodities().removeIf(e -> e == null || e.getCommodityId() == null);

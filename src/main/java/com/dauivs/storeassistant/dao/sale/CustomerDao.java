@@ -6,8 +6,11 @@ import com.dauivs.storeassistant.dao.DBDao;
 import com.dauivs.storeassistant.model.sale.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 public interface CustomerDao extends JpaRepository<Customer, Integer>, CustomerDaoCustom {
+    @Query(value = "select * from customer where deleted = 0 and tel = ?1 limit 1", nativeQuery = true)
+    Customer findByTel(String tel);
 }
 
 interface CustomerDaoCustom {
@@ -29,8 +32,8 @@ class CustomerDaoCustomImpl implements CustomerDaoCustom {
         if (searchParameter.extractParam("gender")) {
             sql.append(" and a.gender = ?");
         }
-        if (searchParameter.extractParam("phone", SearchParameter.LIKE)) {
-            sql.append(" and a.phone like ?");
+        if (searchParameter.extractParam("tel", SearchParameter.LIKE)) {
+            sql.append(" and a.tel like ?");
         }
         if (searchParameter.extractParam("idcard", SearchParameter.LIKE)) {
             sql.append(" and a.idcard like ?");

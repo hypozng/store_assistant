@@ -20,8 +20,8 @@ public class Customer extends BaseModel {
     @Column(name = "birthday")
     private Timestamp birthday;
 
-    @Column(name = "phone")
-    private String phone;
+    @Column(name = "tel")
+    private String tel;
 
     @Column(name = "idcard")
     private String idcard;
@@ -59,12 +59,12 @@ public class Customer extends BaseModel {
         this.birthday = birthday;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getTel() {
+        return tel;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setTel(String tel) {
+        this.tel = tel;
     }
 
     public String getIdcard() {

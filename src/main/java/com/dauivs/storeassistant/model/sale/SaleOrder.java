@@ -40,8 +40,11 @@ public class SaleOrder extends BaseModel {
     @Column(name = "distribution_mode")
     private String distributionMode;
 
-    @Column(name = "phone")
-    private String phone;
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "tel")
+    private String tel;
 
     @Column(name = "address")
     private String address;
@@ -127,12 +130,20 @@ public class SaleOrder extends BaseModel {
         this.distributionMode = distributionMode;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getName() {
+        return name;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
     }
 
     public String getAddress() {

@@ -35,8 +35,8 @@ public class SysUser extends BaseModel {
     @Column(name = "nickname")
     private String nickname;
 
-    @Column(name = "phone")
-    private String phone;
+    @Column(name = "tel")
+    private String tel;
 
     @Column(name = "birthday")
     private Timestamp birthday;
@@ -117,12 +117,12 @@ public class SysUser extends BaseModel {
         this.nickname = nickname;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getTel() {
+        return tel;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setTel(String tel) {
+        this.tel = tel;
     }
 
     public Timestamp getBirthday() {

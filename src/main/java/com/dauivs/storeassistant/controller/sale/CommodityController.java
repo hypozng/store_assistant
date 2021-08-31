@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 @Transactional
@@ -42,6 +43,12 @@ public class CommodityController {
     public ResponseData save(@RequestBody Commodity commodity) {
         if (commodity.getId() == null) {
             commodity.setAmount(BigInteger.ZERO);
+            if (commodity.getPurchasePrice() == null) {
+                commodity.setPurchasePrice(BigDecimal.ZERO);
+            }
+            if (commodity.getSalePrice() == null) {
+                commodity.setSalePrice(BigDecimal.ZERO);
+            }
         } else {
             commodity.setAmount(null);
             commodity.setSalePrice(null);
