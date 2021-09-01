@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -116,16 +117,14 @@ public class SaleOrderController {
         saleOrder.setCode(CommonUtil.generateOrderCode());
         saleOrder.setSalePrice(orderSalePrice);
         saleOrder.setPurchasePrice(orderPurchasePrice);
-        if (saleOrder.getFinalPrice() == null || saleOrder.getFinalPrice().doubleValue() == 0) {
+        if (saleOrder.getFinalPrice() == null || saleOrder.getFinalPrice().equals(BigDecimal.ZERO)) {
             saleOrder.setFinalPrice(orderSalePrice);
         }
-        if (saleOrder.getPaidAmount() == null || saleOrder.getPaidAmount().doubleValue() == 0) {
+        if (saleOrder.getPaidAmount() == null || saleOrder.getPaidAmount().equals(BigDecimal.ZERO)) {
             saleOrder.setPaidAmount(orderSalePrice);
         }
         return ResponseData.success(CommonUtil.save(dao, saleOrder, order -> {
-            for (SaleOrderCommodity orderCommodity : order.getCommodities()) {
-                orderCommodity.setOrderId(order.getId());
-            }
+            order.getCommodities().forEach(orderCommodity -> orderCommodity.setOrderId(order.getId()));
             saleOrderCommodityDao.saveAll(saleOrder.getCommodities());
             if (!commodities.isEmpty()) {
                 commodityDao.saveAll(commodities);
