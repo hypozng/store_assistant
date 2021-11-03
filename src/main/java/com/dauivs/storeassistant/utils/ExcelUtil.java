@@ -46,20 +46,24 @@ public class ExcelUtil {
                     Object value = null;
                     if (cell != null) {
                         switch (cell.getCellType()) {
-                            case Cell.CELL_TYPE_BLANK:
+                            case BLANK:
                                 value = "";
                                 break;
-                            case Cell.CELL_TYPE_BOOLEAN:
+                            case BOOLEAN:
                                 value = cell.getBooleanCellValue();
                                 break;
-                            case Cell.CELL_TYPE_FORMULA:
+                            case FORMULA:
                                 value = cell.getCellFormula();
                                 break;
-                            case Cell.CELL_TYPE_NUMERIC:
+                            case NUMERIC:
                                 value = cell.getNumericCellValue();
                                 break;
-                            case Cell.CELL_TYPE_STRING:
+                            case STRING:
                                 value = cell.getStringCellValue();
+                                break;
+                            case _NONE:
+                            case ERROR:
+                                value = null;
                                 break;
                         }
                     }
